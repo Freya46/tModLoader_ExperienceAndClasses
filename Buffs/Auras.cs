@@ -6,7 +6,7 @@ namespace ExperienceAndClasses.Buffs
     /* Indicator for Saint life aura (no effect) */
     public class Aura_Life : ModBuff
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Life Aura");
             Description.SetDefault("Periodically restores life");
@@ -25,7 +25,7 @@ namespace ExperienceAndClasses.Buffs
         public string tier = "I";
         public int tierNumber = 1;
 
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Defense Aura " + bonus);
             Description.SetDefault("Adds " + bonus + " defense");
@@ -35,11 +35,11 @@ namespace ExperienceAndClasses.Buffs
 
         public override void Update(Player player, ref int buffIndex)
         {
-            if (Helpers.AllowEffect<Player>(mod, player, tierNumber)) player.statDefense += bonus;
+            if (Helpers.AllowEffect<Player>(Mod, player, tierNumber)) player.statDefense += bonus;
         }
         public override void Update(NPC npc, ref int buffIndex)
         {
-            if (Helpers.AllowEffect<NPC>(mod, npc, tierNumber)) npc.defense += bonus;
+            if (Helpers.AllowEffect<NPC>(Mod, npc, tierNumber)) npc.defense += bonus;
         }
     }
 

@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 namespace ExperienceAndClasses.Recipes
 {
     /* Recipes that take experience */
-    class ExpRecipe : ModRecipe
+    class ExpRecipe : Recipe
     {
         public double experienceNeeded = 0;
 
@@ -81,7 +81,7 @@ namespace ExperienceAndClasses.Recipes
     }
 
     /* Recipes that are available at specified class tiers (token must be equipped, else tier 1) */
-    class TierRecipe : ModRecipe
+    class TierRecipe : Recipe
     {
         int tier;
         bool includeLowerTier;

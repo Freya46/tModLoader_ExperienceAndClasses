@@ -16,11 +16,11 @@ public static class Commons
     /// <param name="result"></param>
     /// <param name="numResult"></param>
     /// <param name="where"></param>
-    public static void QuckRecipe(Mod mod, int[,] ingredients, ModItem result, int numResult = 1, ModRecipe buildOn = null, ushort where = TileID.WorkBenches)
+    public static void QuckRecipe(Mod mod, int[,] ingredients, ModItem result, int numResult = 1, Recipe buildOn = null, ushort where = TileID.WorkBenches)
     {
         //recipe
-        ModRecipe recipe;
-        if (buildOn == null) recipe = new ModRecipe(mod);
+        Recipe recipe;
+        if (buildOn == null) recipe = mod.CreateRecipe();
             else recipe = buildOn;
 
         //where to craft (use MaxValue to skip)
@@ -36,10 +36,10 @@ public static class Commons
         }
 
         //result
-        recipe.SetResult(result, numResult);
+        recipe.SetResult(result, numResult);/* tModPorter Pass result to CreateRecipe. */
 
         //complete
-        recipe.AddRecipe();
+        recipe.Register();
     }
 
     /// <summary>
@@ -48,7 +48,7 @@ public static class Commons
     /// </summary>
     /// <param name="recipe"></param>
     /// <returns></returns>
-    public static bool EnforceDuplicatesInRecipe(ModRecipe recipe)
+    public static bool EnforceDuplicatesInRecipe(Recipe recipe)
     {
         List<int> types = new List<int>();
         List<int> stacks = new List<int>();

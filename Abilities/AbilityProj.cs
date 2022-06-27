@@ -17,38 +17,38 @@ namespace ExperienceAndClasses.Abilities
             public override void SetDefaults()
             {
                 base.SetDefaults();
-                projectile.width = 151;
-                projectile.height = 151;
-                projectile.light = 1f;
-                projectile.alpha = 220;
+                Projectile.width = 151;
+                Projectile.height = 151;
+                Projectile.light = 1f;
+                Projectile.alpha = 220;
             }
             public override void AI()
             {
                 //attach to owner
                 if (sanc_index == -1)
                 {
-                    sanc_index = (int)projectile.ai[0];
+                    sanc_index = (int)Projectile.ai[0];
 
-                    if (Main.LocalPlayer.Equals(Main.player[projectile.owner])) //local
+                    if (Main.LocalPlayer.Equals(Main.player[Projectile.owner])) //local
                     {
                         local_owner = true;
 
-                        if ((ExperienceAndClasses.localMyPlayer.sanctuaries[sanc_index] != null) && !ExperienceAndClasses.localMyPlayer.sanctuaries[sanc_index].Equals(projectile))
+                        if ((ExperienceAndClasses.localMyPlayer.sanctuaries[sanc_index] != null) && !ExperienceAndClasses.localMyPlayer.sanctuaries[sanc_index].Equals(Projectile))
                         {
                             ExperienceAndClasses.localMyPlayer.sanctuaries[sanc_index].Kill();
                         }
                     }
 
-                    Main.player[projectile.owner].GetModPlayer<MyPlayer>(mod).sanctuaries[sanc_index] = projectile;
+                    Main.player[Projectile.owner].GetModPlayer<MyPlayer>(Mod).sanctuaries[sanc_index] = Projectile;
                 }
 
                 //unlimited duration
-                projectile.timeLeft = int.MaxValue;
+                Projectile.timeLeft = int.MaxValue;
 
                 //remove any strays
-                if (!Main.player[projectile.owner].active || ((projectile.owner == Main.LocalPlayer.whoAmI) && !ExperienceAndClasses.localMyPlayer.sanctuaries[sanc_index].Equals(projectile)))
+                if (!Main.player[Projectile.owner].active || ((Projectile.owner == Main.LocalPlayer.whoAmI) && !ExperienceAndClasses.localMyPlayer.sanctuaries[sanc_index].Equals(Projectile)))
                 {
-                    projectile.Kill();
+                    Projectile.Kill();
                     return;
                 }
 
@@ -59,7 +59,7 @@ namespace ExperienceAndClasses.Abilities
                     if (!ExperienceAndClasses.localMyPlayer.unlocked_abilities_current[(int)AbilityMain.ID.Cleric_Active_Sanctuary] ||
                         ((sanc_index > 0) && !ExperienceAndClasses.localMyPlayer.unlocked_abilities_current[(int)AbilityMain.ID.Saint_Upgrade_Sanctuary_Link]))
                     {
-                        projectile.Kill();
+                        Projectile.Kill();
                     }
                     else
                     {
@@ -70,7 +70,7 @@ namespace ExperienceAndClasses.Abilities
                             time_next_pulse = now;
 
                             //effects
-                            AbilityMain.Cleric_Active_Sanctuary.Pulse(projectile);
+                            AbilityMain.Cleric_Active_Sanctuary.Pulse(Projectile);
                         }
                     }
                 }
@@ -80,8 +80,8 @@ namespace ExperienceAndClasses.Abilities
             }
             public override void Kill(int timeLeft)
             {
-                MyPlayer myPlayer = Main.player[projectile.owner].GetModPlayer<MyPlayer>(mod);
-                if (myPlayer.sanctuaries[sanc_index].Equals(projectile))
+                MyPlayer myPlayer = Main.player[Projectile.owner].GetModPlayer<MyPlayer>(Mod);
+                if (myPlayer.sanctuaries[sanc_index].Equals(Projectile))
                 {
                     myPlayer.sanctuaries[sanc_index] = null;
                 }
@@ -99,9 +99,9 @@ namespace ExperienceAndClasses.Abilities
             public override void SetDefaults()
             {
                 base.SetDefaults();
-                projectile.width = 40;
-                projectile.height = 60;
-                projectile.alpha = 200;
+                Projectile.width = 40;
+                Projectile.height = 60;
+                Projectile.alpha = 200;
             }
         }
 
@@ -115,9 +115,9 @@ namespace ExperienceAndClasses.Abilities
             public override void SetDefaults()
             {
                 base.SetDefaults();
-                projectile.width = 20;
-                projectile.height = 8;
-                projectile.alpha = 100;
+                Projectile.width = 20;
+                Projectile.height = 8;
+                Projectile.alpha = 100;
             }
         }
 
@@ -131,9 +131,9 @@ namespace ExperienceAndClasses.Abilities
             public override void SetDefaults()
             {
                 base.SetDefaults();
-                projectile.width = 20;
-                projectile.height = 8;
-                projectile.alpha = 100;
+                Projectile.width = 20;
+                Projectile.height = 8;
+                Projectile.alpha = 100;
             }
         }
 
@@ -142,20 +142,20 @@ namespace ExperienceAndClasses.Abilities
             public override void SetDefaults()
             {
                 base.SetDefaults();
-                projectile.height = 127;
-                projectile.width = 12;
-                projectile.penetrate = 3;
-                projectile.friendly = true;
-                projectile.alpha = 100;
-                projectile.light = 0.3f;
-                projectile.timeLeft = (int)TimeSpan.TicksPerSecond * 20;
+                Projectile.height = 127;
+                Projectile.width = 12;
+                Projectile.penetrate = 3;
+                Projectile.friendly = true;
+                Projectile.alpha = 100;
+                Projectile.light = 0.3f;
+                Projectile.timeLeft = (int)TimeSpan.TicksPerSecond * 20;
             }
 
             public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
             {
                 //direction
-                RedirectToNPC(projectile, target);
-                hitDirection = projectile.direction;
+                RedirectToNPC(Projectile, target);
+                hitDirection = Projectile.direction;
 
                 //undead bonus
                 if (AbilityMain.IsUndead(target))
@@ -166,13 +166,13 @@ namespace ExperienceAndClasses.Abilities
 
             public override void ModifyHitPlayer(Player target, ref int damage, ref bool crit)
             {
-                RedirectToPlayer(projectile, target);
+                RedirectToPlayer(Projectile, target);
                 base.ModifyHitPlayer(target, ref damage, ref crit);
             }
 
             public override void ModifyHitPvp(Player target, ref int damage, ref bool crit)
             {
-                RedirectToPlayer(projectile, target);
+                RedirectToPlayer(Projectile, target);
                 base.ModifyHitPvp(target, ref damage, ref crit);
             }
 
@@ -191,7 +191,7 @@ namespace ExperienceAndClasses.Abilities
             public override void SetDefaults()
             {
                 base.SetDefaults();
-                projectile.timeLeft = 100;
+                Projectile.timeLeft = 100;
             }
 
             public override bool? CanHitNPC(NPC target)
@@ -211,17 +211,17 @@ namespace ExperienceAndClasses.Abilities
             {
                 if (!has_run)
                 {
-                    bool is_player = projectile.ai[0] != 0;
-                    int target = (int)projectile.ai[1];
-                    int amount = projectile.damage;
+                    bool is_player = Projectile.ai[0] != 0;
+                    int target = (int)Projectile.ai[1];
+                    int amount = Projectile.damage;
                     int direction = 1;
 
-                    bool sanctuary_heal = projectile.ai[0] == 2;
+                    bool sanctuary_heal = Projectile.ai[0] == 2;
 
                     bool server_or_single = (Main.netMode != 1);
 
                     bool do_visual = false;
-                    if ((is_player && (target == Main.LocalPlayer.whoAmI)) || (!is_player && (projectile.owner == Main.LocalPlayer.whoAmI)))
+                    if ((is_player && (target == Main.LocalPlayer.whoAmI)) || (!is_player && (Projectile.owner == Main.LocalPlayer.whoAmI)))
                     {
                         do_visual = true;
                     }
@@ -232,7 +232,7 @@ namespace ExperienceAndClasses.Abilities
                         Player player = Main.player[target];
                         if (player.active && !player.dead)
                         {
-                            if ((amount > 0) && !(!Main.player[projectile.owner].hostile && player.hostile))//don't let non-pvp players heal pvp players
+                            if ((amount > 0) && !(!Main.player[Projectile.owner].hostile && player.hostile))//don't let non-pvp players heal pvp players
                             {
                                 int amount_valid = player.statLifeMax2 - player.statLife;
                                 if (amount > amount_valid)
@@ -246,7 +246,7 @@ namespace ExperienceAndClasses.Abilities
                                 player.statLife += amount;
                                 if (sanctuary_heal)
                                 {
-                                    player.GetModPlayer<MyPlayer>(mod).time_last_sanc_effect = DateTime.Now;
+                                    player.GetModPlayer<MyPlayer>(Mod).time_last_sanc_effect = DateTime.Now;
                                 }
                             }
                             else if (amount < 0)
@@ -254,11 +254,11 @@ namespace ExperienceAndClasses.Abilities
                                 if (do_visual)
                                 {
                                     amount *= -1;
-                                    if (projectile.Center.X > player.Center.X)
+                                    if (Projectile.Center.X > player.Center.X)
                                     {
                                         direction = -1;
                                     }
-                                    player.Hurt(Terraria.DataStructures.PlayerDeathReason.ByPlayer(projectile.owner), amount, direction, true);
+                                    player.Hurt(Terraria.DataStructures.PlayerDeathReason.ByPlayer(Projectile.owner), amount, direction, true);
                                 }
                                 //player.GetModPlayer<MyPlayer>(mod).time_last_hit_taken = DateTime.Now;
                                 //Main.player[projectile.owner].GetModPlayer<MyPlayer>(mod).time_last_hit_taken = DateTime.Now;
@@ -289,11 +289,11 @@ namespace ExperienceAndClasses.Abilities
                                 if (server_or_single)
                                 {
                                     amount *= -1;
-                                    if (projectile.Center.X > npc.Center.X)
+                                    if (Projectile.Center.X > npc.Center.X)
                                     {
                                         direction = -1;
                                     }
-                                    Main.player[projectile.owner].ApplyDamageToNPC(npc, amount, projectile.knockBack, direction, false);
+                                    Main.player[Projectile.owner].ApplyDamageToNPC(npc, amount, Projectile.knockBack, direction, false);
                                 }
                                 //Main.player[projectile.owner].GetModPlayer<MyPlayer>(mod).time_last_hit_taken = DateTime.Now;
                             }
@@ -321,7 +321,7 @@ namespace ExperienceAndClasses.Abilities
             public override void SetDefaults()
             {
                 base.SetDefaults();
-                projectile.timeLeft = 100;
+                Projectile.timeLeft = 100;
             }
 
             public override bool? CanHitNPC(NPC target)
@@ -341,15 +341,15 @@ namespace ExperienceAndClasses.Abilities
             {
                 if (!has_run)
                 {
-                    int player_index = (int)projectile.damage;
-                    float magnitude = projectile.knockBack;
-                    byte status = (byte)projectile.ai[0];
-                    double duration_seconds = projectile.ai[1];
-                    bool force_mode = (projectile.velocity.X != 0);
+                    int player_index = (int)Projectile.damage;
+                    float magnitude = Projectile.knockBack;
+                    byte status = (byte)Projectile.ai[0];
+                    double duration_seconds = Projectile.ai[1];
+                    bool force_mode = (Projectile.velocity.X != 0);
 
                     if (Main.player[player_index].active && !Main.player[player_index].dead)
                     {
-                        MyPlayer myPlayer = Main.player[player_index].GetModPlayer<MyPlayer>(mod);
+                        MyPlayer myPlayer = Main.player[player_index].GetModPlayer<MyPlayer>(Mod);
 
                         if (duration_seconds > 0) //add status
                         {
@@ -364,7 +364,7 @@ namespace ExperienceAndClasses.Abilities
                                 myPlayer.status_magnitude[status] = magnitude;
                             }
 
-                            if (myPlayer.show_status_messages && !myPlayer.status_active[status] && (myPlayer.player.whoAmI == Main.LocalPlayer.whoAmI))
+                            if (myPlayer.show_status_messages && !myPlayer.status_active[status] && (myPlayer.Player.whoAmI == Main.LocalPlayer.whoAmI))
                             {
                                 //Main.NewText("Gained Effect: " + (ExperienceAndClasses.STATUSES)status + " (MAG: " + myPlayer.status_magnitude[status] + ", DUR: " + myPlayer.status_end_time[status].Subtract(now).TotalSeconds + ")", ExperienceAndClasses.MESSAGE_COLOUR_GREEN);
                                 Main.NewText("Gained Status: " + (ExperienceAndClasses.STATUSES)status, ExperienceAndClasses.MESSAGE_COLOUR_GREEN);
@@ -379,7 +379,7 @@ namespace ExperienceAndClasses.Abilities
                             myPlayer.status_end_time[status] = DateTime.MinValue;
                             myPlayer.status_magnitude[status] = 0;
 
-                            if (myPlayer.show_status_messages && (myPlayer.player.whoAmI == Main.LocalPlayer.whoAmI))
+                            if (myPlayer.show_status_messages && (myPlayer.Player.whoAmI == Main.LocalPlayer.whoAmI))
                             {
                                 Main.NewText("Lost Status: " + (ExperienceAndClasses.STATUSES)status, ExperienceAndClasses.MESSAGE_COLOUR_RED);
                             }
@@ -425,29 +425,29 @@ namespace ExperienceAndClasses.Abilities
         public override void AI()
         {
             //setup
-            Player player = Main.player[projectile.owner];
+            Player player = Main.player[Projectile.owner];
 
             //creates ability on-use dust effect, shows for all clients but dust scatter is unqiue for each client
-            switch ((MODE)projectile.ai[0])
+            switch ((MODE)Projectile.ai[0])
             {
                 case MODE.ABILITY_CAST:
-                    SpreadDust(player.Center, ExperienceAndClasses.mod.DustType<Dusts.Dust_AbilityGeneric>(), 3, 5, 2, 150, AbilityMain.COLOUR_CLASS_TYPE[(int)projectile.ai[1]]);
+                    SpreadDust(player.Center, ExperienceAndClasses.mod.DustType<Dusts.Dust_AbilityGeneric>(), 3, 5, 2, 150, AbilityMain.COLOUR_CLASS_TYPE[(int)Projectile.ai[1]]);
                     break;
                 case MODE.HEAL:
-                    SpreadDust(projectile.position, DustID.AncientLight, 10, AbilityMain.Cleric_Active_Heal.RANGE / 6, 3, 150, Color.Red, true, true);
+                    SpreadDust(Projectile.position, DustID.AncientLight, 10, AbilityMain.Cleric_Active_Heal.RANGE / 6, 3, 150, Color.Red, true, true);
                     break;
                 case MODE.HEAL_RENEW:
-                    SpreadDust(projectile.position, DustID.AncientLight, 3, 10, 2, 150, Color.White, true, true);
+                    SpreadDust(Projectile.position, DustID.AncientLight, 3, 10, 2, 150, Color.White, true, true);
                     break;
                 case MODE.DIVINE_INTERVENTION:
-                    SpreadDust(projectile.position, DustID.AncientLight, 10, projectile.ai[1] / 6, 3, 150, Color.Yellow, true, true);
+                    SpreadDust(Projectile.position, DustID.AncientLight, 10, Projectile.ai[1] / 6, 3, 150, Color.Yellow, true, true);
                     break;
                 default:
                     break;
             }
 
             //done
-            projectile.Kill();
+            Projectile.Kill();
         }
 
         private static void SpreadDust(Vector2 position, int dust_type, int loop_count, float velocity, float scale = 1, int alpha = 255, Color colour = default(Color), bool remove_gravity = false, bool remove_light = false)
@@ -544,51 +544,51 @@ namespace ExperienceAndClasses.Abilities
         {
             if (!run_already)
             {
-                owner_myPlayer = Main.player[projectile.owner].GetModPlayer<MyPlayer>(mod);
-                if (Main.LocalPlayer.whoAmI == owner_myPlayer.player.whoAmI)
+                owner_myPlayer = Main.player[Projectile.owner].GetModPlayer<MyPlayer>(Mod);
+                if (Main.LocalPlayer.whoAmI == owner_myPlayer.Player.whoAmI)
                 {
-                    if ((owner_myPlayer.status_visuals[status_index] != null) && !owner_myPlayer.status_visuals[status_index].Equals(projectile))
+                    if ((owner_myPlayer.status_visuals[status_index] != null) && !owner_myPlayer.status_visuals[status_index].Equals(Projectile))
                     {
                         owner_myPlayer.status_visuals[status_index].Kill();
                     }
                 }
-                owner_myPlayer.status_visuals[status_index] = projectile;
+                owner_myPlayer.status_visuals[status_index] = Projectile;
                 run_already = true;
             }
 
-            projectile.timeLeft = int.MaxValue;
+            Projectile.timeLeft = int.MaxValue;
 
             if (!owner_myPlayer.status_active[status_index])
             {
-                projectile.Kill();
+                Projectile.Kill();
             }
 
-            Vector2 new_pos = Main.player[projectile.owner].Center;
+            Vector2 new_pos = Main.player[Projectile.owner].Center;
             switch (position_type)
             {
                 case (POSITION.CENTER):
-                    new_pos.X -= projectile.width / 2;
-                    new_pos.Y -= projectile.height / 2;
+                    new_pos.X -= Projectile.width / 2;
+                    new_pos.Y -= Projectile.height / 2;
                     break;
                 case (POSITION.ABOVE):
-                    new_pos.X -= projectile.width / 2;
-                    new_pos.Y -= (Main.LocalPlayer.height * 0.66f) + projectile.height;
+                    new_pos.X -= Projectile.width / 2;
+                    new_pos.Y -= (Main.LocalPlayer.height * 0.66f) + Projectile.height;
                     break;
                 case (POSITION.BOTTOM):
-                    new_pos.X -= projectile.width / 2;
-                    new_pos.Y -= (projectile.height - Main.LocalPlayer.height / 2);
+                    new_pos.X -= Projectile.width / 2;
+                    new_pos.Y -= (Projectile.height - Main.LocalPlayer.height / 2);
                     break;
                 default:
                     break;
             }
-            projectile.position = new_pos;
+            Projectile.position = new_pos;
 
             base.AI();
         }
 
         public override void Kill(int timeLeft)
         {
-            if ((owner_myPlayer.status_visuals[status_index] != null) && owner_myPlayer.status_visuals[status_index].Equals(projectile))
+            if ((owner_myPlayer.status_visuals[status_index] != null) && owner_myPlayer.status_visuals[status_index].Equals(Projectile))
             {
                 owner_myPlayer.status_visuals[status_index] = null;
             }
@@ -603,7 +603,7 @@ namespace ExperienceAndClasses.Abilities
         {
             get
             {
-                return mod.Name + "/Abilities/Placeholder";
+                return Mod.Name + "/Abilities/Placeholder";
             }
         }
     }
@@ -615,16 +615,16 @@ namespace ExperienceAndClasses.Abilities
 
         public override void SetStaticDefaults()
         {
-            Main.projFrames[projectile.type] = NUMBER_FRAMES;
+            Main.projFrames[Projectile.type] = NUMBER_FRAMES;
         }
         public override void AI()
         {
-            if (++projectile.frameCounter >= TICKS_PER_FRAME)
+            if (++Projectile.frameCounter >= TICKS_PER_FRAME)
             {
-                projectile.frameCounter = 0;
-                if (++projectile.frame >= NUMBER_FRAMES)
+                Projectile.frameCounter = 0;
+                if (++Projectile.frame >= NUMBER_FRAMES)
                 {
-                    projectile.frame = 0;
+                    Projectile.frame = 0;
                 }
             }
             base.AI();
@@ -646,9 +646,9 @@ namespace ExperienceAndClasses.Abilities
         public override void SetDefaults()
         {
             //default all mod projectiles to not hit anything
-            projectile.friendly = false;
-            projectile.hostile = false;
-            projectile.tileCollide = false;
+            Projectile.friendly = false;
+            Projectile.hostile = false;
+            Projectile.tileCollide = false;
         }
 
         public SyncingProjectile()
@@ -660,7 +660,7 @@ namespace ExperienceAndClasses.Abilities
         {
             base.AI();
 
-            if (projectile.owner == Main.LocalPlayer.whoAmI)
+            if (Projectile.owner == Main.LocalPlayer.whoAmI)
             {
                 //trigger sync when # of players changes (static)
                 if (ExperienceAndClasses.sync_local_proj)
@@ -680,7 +680,7 @@ namespace ExperienceAndClasses.Abilities
                 if (sync_counter != global_sync_counter)
                 {
                     sync_counter = global_sync_counter;
-                    projectile.netUpdate = true;
+                    Projectile.netUpdate = true;
                 }
                 else if (DO_TIMED_SYNC)
                 {
@@ -688,7 +688,7 @@ namespace ExperienceAndClasses.Abilities
                     if (next_sync.CompareTo(now) <= 0)
                     {
                         next_sync = now.AddSeconds(SYNC_EVERY_N_SECONDS);
-                        projectile.netUpdate = true;
+                        Projectile.netUpdate = true;
                     }
                 }
             }

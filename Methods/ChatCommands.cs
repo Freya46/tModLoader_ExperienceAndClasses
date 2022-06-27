@@ -1,5 +1,6 @@
 ﻿using System;
 using Terraria;
+using Terraria.Chat;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
@@ -351,7 +352,7 @@ namespace ExperienceAndClasses.Methods
             if (Main.netMode == 2)
             {
                 Console.WriteLine(text);
-                NetMessage.BroadcastChatMessage(NetworkText.FromLiteral(text), ExperienceAndClasses.MESSAGE_COLOUR_MAGENTA);
+                ChatHelper.BroadcastChatMessage(NetworkText.FromLiteral(text), ExperienceAndClasses.MESSAGE_COLOUR_MAGENTA);
             }
             else
             {

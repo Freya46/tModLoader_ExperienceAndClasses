@@ -15,7 +15,7 @@ namespace ExperienceAndClasses.NPCs
         public const double EATER_14_MULT = 1.109713024;
         public const double EATER_15_MULT = 0.647725809;
 
-        public override void NPCLoot(NPC npc) //bool CheckDead(NPC npc)
+        public override void OnKill(NPC npc) //bool CheckDead(NPC npc)
         {
             /*~~~~~~~~~~~~~~~~~~~~~~ Checks ~~~~~~~~~~~~~~~~~~~~~~*/
             //singleplayer and server-side only
@@ -131,7 +131,7 @@ namespace ExperienceAndClasses.NPCs
                         player = Main.player[playerIndex];
                         if (!player.active) continue;
                     }
-                    myPlayer = player.GetModPlayer<MyPlayer>(mod);
+                    myPlayer = player.GetModPlayer<MyPlayer>(Mod);
 
                     //only reward if not afk
                     if (!myPlayer.afk)
@@ -208,14 +208,14 @@ namespace ExperienceAndClasses.NPCs
                 npc.playerInteraction = interactionsBossOrb;
                 if (droppedBossOrb)
                 {
-                    npc.DropItemInstanced(npc.position, npc.Size, mod.ItemType("Boss_Orb"), 1, true);
+                    npc.DropItemInstanced(npc.position, npc.Size, Mod.Find<ModItem>("Boss_Orb").Type, 1, true);
                 }
 
                 //ascension orb
                 npc.playerInteraction = interactionsMonsterOrb;
                 if (droppedMonsterOrb)
                 {
-                    npc.DropItemInstanced(npc.position, npc.Size, mod.ItemType("Monster_Orb"), 1, true);
+                    npc.DropItemInstanced(npc.position, npc.Size, Mod.Find<ModItem>("Monster_Orb").Type, 1, true);
                 }
 
                 //messages
@@ -241,7 +241,7 @@ namespace ExperienceAndClasses.NPCs
                 npc.playerInteraction = interactionsBefore;
             }
             /*~~~~~~~~~~~~~~~~~~~~~~Done~~~~~~~~~~~~~~~~~~~~~~*/
-            base.NPCLoot(npc);
+            base.OnKill(npc);
         }
     }
 }

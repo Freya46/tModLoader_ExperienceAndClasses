@@ -6,7 +6,7 @@ using System.Collections;
 
 namespace ExperienceAndClasses
 {
-    public class MyWorld : ModWorld
+    public class MyWorld : ModSystem
     {
         public const double TIME_BETWEEN_REQUEST_MSEC = 1000;
         public static DateTime timeLastRequests = DateTime.Now;
@@ -28,7 +28,7 @@ namespace ExperienceAndClasses
 
         public static int active_player_count = 0;
 
-        public override TagCompound Save()
+        public override void SaveWorldData(TagCompound tag)/* tModPorter Suggestion: Edit tag parameter instead of returning new TagCompound */
         {
             return new TagCompound {
                 {"AUTH_CODE", ExperienceAndClasses.worldAuthCode},
@@ -42,7 +42,7 @@ namespace ExperienceAndClasses
             };
         }
 
-        public override void Load(TagCompound tag)
+        public override void LoadWorldData(TagCompound tag)
         {
             ExperienceAndClasses.worldAuthCode = Commons.TryGet<double>(tag, "AUTH_CODE", -1);
             ExperienceAndClasses.worldRequireAuth = Commons.TryGet<bool>(tag, "require_auth", true);
@@ -58,7 +58,7 @@ namespace ExperienceAndClasses
         }
 
         public static int testvar = 0;
-        public override void PostUpdate()
+        public override void PostUpdateWorld()
         {
             if (Main.netMode == 2) // server only
             {
@@ -78,17 +78,17 @@ namespace ExperienceAndClasses
                 else if (now.AddMilliseconds(-TIME_BETWEEN_SYNC_MAP_SETTINGS_MSEC).CompareTo(timeLastSyncMapSettings) > 0)
                 {
                     timeLastSyncMapSettings = now;
-                    Methods.PacketSender.ServerUpdateMapSettings(mod);
+                    Methods.PacketSender.ServerUpdateMapSettings(Mod);
                 }
                 else if (now.AddMilliseconds(-TIME_BETWEEN_SYNC_EXP_CHANGES_MSEC).CompareTo(timeLastSyncExpChanges) > 0)
                 {
                     timeLastSyncExpChanges = now;
-                    Methods.PacketSender.ServerSyncExp(mod);
+                    Methods.PacketSender.ServerSyncExp(Mod);
                 }
                 else if (now.AddMilliseconds(-TIME_BETWEEN_SYNC_EXP_ALL_MSEC).CompareTo(timeLastSyncExpAll) > 0)
                 {
                     timeLastSyncExpAll = now;
-                    Methods.PacketSender.ServerSyncExp(mod, true);
+                    Methods.PacketSender.ServerSyncExp(Mod, true);
                 }
             }
         }
@@ -107,11 +107,11 @@ namespace ExperienceAndClasses
             {
                 if (Main.player[i].active)
                 {
-                    myPlayer = Main.player[i].GetModPlayer<MyPlayer>(mod);
+                    myPlayer = Main.player[i].GetModPlayer<MyPlayer>(Mod);
                     if (myPlayer.GetExp() == -1)// && target_time.CompareTo(time_last_player_request[i])>0)
                     {
                         //Server's request to new player (includes map settings)
-                        Methods.PacketSender.ServerNewPlayerSync(mod, i);
+                        Methods.PacketSender.ServerNewPlayerSync(Mod, i);
                     }
                     active_player_count++;
                 }

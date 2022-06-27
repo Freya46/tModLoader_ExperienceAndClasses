@@ -7,7 +7,7 @@ namespace ExperienceAndClasses.Buffs
     /* Assassin opener attack indicator */
     class Buff_OpenerAttack : ModBuff
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             //Main.buffName[Type] = "Opener Attack";
             //Main.buffTip[Type] = "Bonus damage on the next melee attack\nBonus is half for yo-yo";
@@ -21,7 +21,7 @@ namespace ExperienceAndClasses.Buffs
     /* Assassin opener attack phase (cannot be hit) */
     class Buff_OpenerPhase : ModBuff
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             //Main.buffName[Type] = "Phase";
             //Main.buffTip[Type] = "Cannot be hit";
@@ -32,7 +32,7 @@ namespace ExperienceAndClasses.Buffs
         }
         public override void Update(Player player, ref int buffIndex)
         {
-            if (player.GetModPlayer<MyPlayer>(mod).openerImmuneEnd.CompareTo(DateTime.Now) <= 0)
+            if (player.GetModPlayer<MyPlayer>(Mod).openerImmuneEnd.CompareTo(DateTime.Now) <= 0)
             {
                 //player.DelBuff(mod.BuffType<Buffs.Buff_OpenerPhase>());
             }
@@ -40,7 +40,7 @@ namespace ExperienceAndClasses.Buffs
             {
                 player.immune = true;
                 player.immuneTime = 1;
-                player.AddBuff(mod.BuffType<Buffs.Buff_OpenerPhase>(), 1);
+                player.AddBuff(Mod.BuffType<Buffs.Buff_OpenerPhase>(), 1);
             }
 
             base.Update(player, ref buffIndex);

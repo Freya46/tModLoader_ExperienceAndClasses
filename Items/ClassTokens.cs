@@ -22,19 +22,19 @@ namespace ExperienceAndClasses.Items
 
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            MyPlayer myLocalPlayer = Main.LocalPlayer.GetModPlayer<MyPlayer>(mod);
+            MyPlayer myLocalPlayer = Main.LocalPlayer.GetModPlayer<MyPlayer>(Mod);
 
             bool isEquipped = false;
             foreach (var i in myLocalPlayer.classTokensEquipped)
             {
                 if (i.Item2.Equals(name)) isEquipped = true;
             }
-            string desc2 = Helpers.ClassTokenEffects(mod, Main.LocalPlayer, this, name, false, myLocalPlayer, isEquipped);
+            string desc2 = Helpers.ClassTokenEffects(Mod, Main.LocalPlayer, this, name, false, myLocalPlayer, isEquipped);
 
             if (desc2.Length > 0)
             {
-                TooltipLine line = new TooltipLine(mod, "desc2", desc2);
-                line.overrideColor = Color.LimeGreen;
+                TooltipLine line = new TooltipLine(Mod, "desc2", desc2);
+                line.OverrideColor = Color.LimeGreen;
                 tooltips.Add(line);
             }
         }
@@ -42,7 +42,7 @@ namespace ExperienceAndClasses.Items
         public override void UpdateInventory(Player player)
         {
             //update description in inventory (remove current bonuses)
-            if (Main.LocalPlayer.Equals(player)) item.RebuildTooltip();
+            if (Main.LocalPlayer.Equals(player)) Item.RebuildTooltip();
             base.UpdateInventory(player);
         }
 
@@ -63,24 +63,24 @@ namespace ExperienceAndClasses.Items
 
         public override void SetDefaults()
         {
-            item.width = 36;
-            item.height = 36;
-            item.value = 0;
-            item.rare = 10;
-            item.accessory = true;
+            Item.width = 36;
+            Item.height = 36;
+            Item.value = 0;
+            Item.rare = 10;
+            Item.accessory = true;
 
             //add class bonuses description
-            Helpers.ClassTokenEffects(mod, Main.LocalPlayer, this, name, false, new MyPlayer());
+            Helpers.ClassTokenEffects(Mod, Main.LocalPlayer, this, name, false, new MyPlayer());
         }
 
         public override void AddRecipes()
         {
-            if (tier==1) Commons.QuckRecipe(mod, new int[,] { }, this, 1, new Recipes.ClassRecipes(mod, tier));
+            if (tier==1) Commons.QuckRecipe(Mod, new int[,] { }, this, 1, new Recipes.ClassRecipes(Mod, tier));
         }
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            MyPlayer myPlayer = player.GetModPlayer<MyPlayer>(mod);
+            MyPlayer myPlayer = player.GetModPlayer<MyPlayer>(Mod);
 
             myPlayer.classTokensEquipped.Add(new Tuple<ModItem, string>(this, name));
 
@@ -111,9 +111,9 @@ namespace ExperienceAndClasses.Items
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe = new Recipes.ClassRecipes(mod, tier);
+            Recipe recipe = new Recipes.ClassRecipes(Mod, tier);
             recipe.AddRecipeGroup("IronBar", 10);
-            Commons.QuckRecipe(mod, new int[,] { { mod.ItemType("ClassToken_Novice"), 1 } }, this, 1, recipe);
+            Commons.QuckRecipe(Mod, new int[,] { { Mod.Find<ModItem>("ClassToken_Novice").Type, 1 } }, this, 1, recipe);
         }
     }
 
@@ -130,8 +130,8 @@ namespace ExperienceAndClasses.Items
         }
         public override void AddRecipes()
         {
-            Commons.QuckRecipe(mod, new int[,] { { mod.ItemType("ClassToken_Squire"), 1 }, { ItemID.StoneBlock, 999 } }, this, 1, new Recipes.ClassRecipes(mod, tier));
-            Commons.QuckRecipe(mod, new int[,] { { mod.ItemType("ClassToken_Hybrid"), 1 }, { ItemID.StoneBlock, 999 } }, this, 1, new Recipes.ClassRecipes(mod, tier));
+            Commons.QuckRecipe(Mod, new int[,] { { Mod.Find<ModItem>("ClassToken_Squire").Type, 1 }, { ItemID.StoneBlock, 999 } }, this, 1, new Recipes.ClassRecipes(Mod, tier));
+            Commons.QuckRecipe(Mod, new int[,] { { Mod.Find<ModItem>("ClassToken_Hybrid").Type, 1 }, { ItemID.StoneBlock, 999 } }, this, 1, new Recipes.ClassRecipes(Mod, tier));
         }
     }
 
@@ -148,15 +148,15 @@ namespace ExperienceAndClasses.Items
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe;
+            Recipe recipe;
 
-            recipe = new Recipes.ClassRecipes(mod, tier);
+            recipe = new Recipes.ClassRecipes(Mod, tier);
             recipe.AddRecipeGroup("IronBar", 100);
-            Commons.QuckRecipe(mod, new int[,] { { mod.ItemType("ClassToken_Squire"), 1 } }, this, 1, recipe);
+            Commons.QuckRecipe(Mod, new int[,] { { Mod.Find<ModItem>("ClassToken_Squire").Type, 1 } }, this, 1, recipe);
 
-            recipe = new Recipes.ClassRecipes(mod, tier);
+            recipe = new Recipes.ClassRecipes(Mod, tier);
             recipe.AddRecipeGroup("IronBar", 100);
-            Commons.QuckRecipe(mod, new int[,] { { mod.ItemType("ClassToken_Hybrid"), 1 } }, this, 1, recipe);
+            Commons.QuckRecipe(Mod, new int[,] { { Mod.Find<ModItem>("ClassToken_Hybrid").Type, 1 } }, this, 1, recipe);
         }
     }
 
@@ -173,15 +173,15 @@ namespace ExperienceAndClasses.Items
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe;
+            Recipe recipe;
 
-            recipe = new Recipes.ClassRecipes(mod, tier);
+            recipe = new Recipes.ClassRecipes(Mod, tier);
             recipe.AddRecipeGroup("IronBar", 100);
-            Commons.QuckRecipe(mod, new int[,] { { mod.ItemType("ClassToken_Squire"), 1 } }, this, 1, recipe);
+            Commons.QuckRecipe(Mod, new int[,] { { Mod.Find<ModItem>("ClassToken_Squire").Type, 1 } }, this, 1, recipe);
 
-            recipe = new Recipes.ClassRecipes(mod, tier);
+            recipe = new Recipes.ClassRecipes(Mod, tier);
             recipe.AddRecipeGroup("IronBar", 100);
-            Commons.QuckRecipe(mod, new int[,] { { mod.ItemType("ClassToken_Hybrid"), 1 } }, this, 1, recipe);
+            Commons.QuckRecipe(Mod, new int[,] { { Mod.Find<ModItem>("ClassToken_Hybrid").Type, 1 } }, this, 1, recipe);
         }
     }
 
@@ -197,9 +197,9 @@ namespace ExperienceAndClasses.Items
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe = new Recipes.ClassRecipes(mod, tier);
+            Recipe recipe = new Recipes.ClassRecipes(Mod, tier);
             recipe.AddRecipeGroup("Wood", 100);
-            Commons.QuckRecipe(mod, new int[,] { { mod.ItemType("ClassToken_Novice"), 1 } }, this, 1, recipe);
+            Commons.QuckRecipe(Mod, new int[,] { { Mod.Find<ModItem>("ClassToken_Novice").Type, 1 } }, this, 1, recipe);
         }
     }
 
@@ -216,15 +216,15 @@ namespace ExperienceAndClasses.Items
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe;
+            Recipe recipe;
 
-            recipe = new Recipes.ClassRecipes(mod, tier);
+            recipe = new Recipes.ClassRecipes(Mod, tier);
             recipe.AddRecipeGroup("Wood", 500);
-            Commons.QuckRecipe(mod, new int[,] { { mod.ItemType("ClassToken_Hunter"), 1 } }, this, 1, recipe);
+            Commons.QuckRecipe(Mod, new int[,] { { Mod.Find<ModItem>("ClassToken_Hunter").Type, 1 } }, this, 1, recipe);
 
-            recipe = new Recipes.ClassRecipes(mod, tier);
+            recipe = new Recipes.ClassRecipes(Mod, tier);
             recipe.AddRecipeGroup("Wood", 500);
-            Commons.QuckRecipe(mod, new int[,] { { mod.ItemType("ClassToken_Hybrid"), 1 } }, this, 1, recipe);
+            Commons.QuckRecipe(Mod, new int[,] { { Mod.Find<ModItem>("ClassToken_Hybrid").Type, 1 } }, this, 1, recipe);
         }
     }
 
@@ -242,17 +242,17 @@ namespace ExperienceAndClasses.Items
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe;
+            Recipe recipe;
 
-            recipe = new Recipes.ClassRecipes(mod, tier);
+            recipe = new Recipes.ClassRecipes(Mod, tier);
             recipe.AddRecipeGroup("IronBar", 50);
             recipe.AddRecipeGroup("Wood", 250);
-            Commons.QuckRecipe(mod, new int[,] { { mod.ItemType("ClassToken_Hunter"), 1 } }, this, 1, recipe);
+            Commons.QuckRecipe(Mod, new int[,] { { Mod.Find<ModItem>("ClassToken_Hunter").Type, 1 } }, this, 1, recipe);
 
-            recipe = new Recipes.ClassRecipes(mod, tier);
+            recipe = new Recipes.ClassRecipes(Mod, tier);
             recipe.AddRecipeGroup("IronBar", 50);
             recipe.AddRecipeGroup("Wood", 250);
-            Commons.QuckRecipe(mod, new int[,] { { mod.ItemType("ClassToken_Hybrid"), 1 } }, this, 1, recipe);
+            Commons.QuckRecipe(Mod, new int[,] { { Mod.Find<ModItem>("ClassToken_Hybrid").Type, 1 } }, this, 1, recipe);
         }
     }
 
@@ -269,15 +269,15 @@ namespace ExperienceAndClasses.Items
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe;
+            Recipe recipe;
 
-            recipe = new Recipes.ClassRecipes(mod, tier);
+            recipe = new Recipes.ClassRecipes(Mod, tier);
             recipe.AddRecipeGroup("IronBar", 100);
-            Commons.QuckRecipe(mod, new int[,] { { mod.ItemType("ClassToken_Hunter"), 1 } }, this, 1, recipe);
+            Commons.QuckRecipe(Mod, new int[,] { { Mod.Find<ModItem>("ClassToken_Hunter").Type, 1 } }, this, 1, recipe);
 
-            recipe = new Recipes.ClassRecipes(mod, tier);
+            recipe = new Recipes.ClassRecipes(Mod, tier);
             recipe.AddRecipeGroup("IronBar", 100);
-            Commons.QuckRecipe(mod, new int[,] { { mod.ItemType("ClassToken_Hybrid"), 1 } }, this, 1, recipe);
+            Commons.QuckRecipe(Mod, new int[,] { { Mod.Find<ModItem>("ClassToken_Hybrid").Type, 1 } }, this, 1, recipe);
         }
     }
 
@@ -293,7 +293,7 @@ namespace ExperienceAndClasses.Items
         }
         public override void AddRecipes()
         {
-            Commons.QuckRecipe(mod, new int[,] { { mod.ItemType("ClassToken_Novice"), 1 }, { ItemID.FallenStar, 3 } }, this, 1, new Recipes.ClassRecipes(mod, tier));
+            Commons.QuckRecipe(Mod, new int[,] { { Mod.Find<ModItem>("ClassToken_Novice").Type, 1 }, { ItemID.FallenStar, 3 } }, this, 1, new Recipes.ClassRecipes(Mod, tier));
         }
     }
 
@@ -311,8 +311,8 @@ namespace ExperienceAndClasses.Items
         }
         public override void AddRecipes()
         {
-            Commons.QuckRecipe(mod, new int[,] { { mod.ItemType("ClassToken_Mage"), 1 }, {ItemID.FallenStar, 20} }, this, 1, new Recipes.ClassRecipes(mod, tier));
-            Commons.QuckRecipe(mod, new int[,] { { mod.ItemType("ClassToken_Hybrid"), 1 }, {ItemID.FallenStar, 20} }, this, 1, new Recipes.ClassRecipes(mod, tier));
+            Commons.QuckRecipe(Mod, new int[,] { { Mod.Find<ModItem>("ClassToken_Mage").Type, 1 }, {ItemID.FallenStar, 20} }, this, 1, new Recipes.ClassRecipes(Mod, tier));
+            Commons.QuckRecipe(Mod, new int[,] { { Mod.Find<ModItem>("ClassToken_Hybrid").Type, 1 }, {ItemID.FallenStar, 20} }, this, 1, new Recipes.ClassRecipes(Mod, tier));
         }
     }
 
@@ -332,10 +332,10 @@ namespace ExperienceAndClasses.Items
         }
         public override void AddRecipes()
         {
-            Commons.QuckRecipe(mod, new int[,] { { mod.ItemType("ClassToken_Mage"), 1 }, {ItemID.FallenStar, 10},
-                {ItemID.StoneBlock, 500} }, this, 1, new Recipes.ClassRecipes(mod, tier));
-            Commons.QuckRecipe(mod, new int[,] { { mod.ItemType("ClassToken_Hybrid"), 1 }, {ItemID.FallenStar, 10},
-                {ItemID.StoneBlock, 500} }, this, 1, new Recipes.ClassRecipes(mod, tier));
+            Commons.QuckRecipe(Mod, new int[,] { { Mod.Find<ModItem>("ClassToken_Mage").Type, 1 }, {ItemID.FallenStar, 10},
+                {ItemID.StoneBlock, 500} }, this, 1, new Recipes.ClassRecipes(Mod, tier));
+            Commons.QuckRecipe(Mod, new int[,] { { Mod.Find<ModItem>("ClassToken_Hybrid").Type, 1 }, {ItemID.FallenStar, 10},
+                {ItemID.StoneBlock, 500} }, this, 1, new Recipes.ClassRecipes(Mod, tier));
         }
     }
 
@@ -351,7 +351,7 @@ namespace ExperienceAndClasses.Items
         }
         public override void AddRecipes()
         {
-            Commons.QuckRecipe(mod, new int[,] { { mod.ItemType("ClassToken_Novice"), 1 }, { mod.ItemType("Monster_Orb"), 1} }, this, 1, new Recipes.ClassRecipes(mod, tier));
+            Commons.QuckRecipe(Mod, new int[,] { { Mod.Find<ModItem>("ClassToken_Novice").Type, 1 }, { Mod.Find<ModItem>("Monster_Orb").Type, 1} }, this, 1, new Recipes.ClassRecipes(Mod, tier));
         }
     }
 
@@ -368,8 +368,8 @@ namespace ExperienceAndClasses.Items
         }
         public override void AddRecipes()
         {
-            Commons.QuckRecipe(mod, new int[,] { { mod.ItemType("ClassToken_Summoner"), 1 }, { mod.ItemType("Monster_Orb"), 10 } }, this, 1, new Recipes.ClassRecipes(mod, tier));
-            Commons.QuckRecipe(mod, new int[,] { { mod.ItemType("ClassToken_Hybrid"), 1 }, { mod.ItemType("Monster_Orb"), 10 } }, this, 1, new Recipes.ClassRecipes(mod, tier));
+            Commons.QuckRecipe(Mod, new int[,] { { Mod.Find<ModItem>("ClassToken_Summoner").Type, 1 }, { Mod.Find<ModItem>("Monster_Orb").Type, 10 } }, this, 1, new Recipes.ClassRecipes(Mod, tier));
+            Commons.QuckRecipe(Mod, new int[,] { { Mod.Find<ModItem>("ClassToken_Hybrid").Type, 1 }, { Mod.Find<ModItem>("Monster_Orb").Type, 10 } }, this, 1, new Recipes.ClassRecipes(Mod, tier));
         }
     }
 
@@ -392,8 +392,8 @@ namespace ExperienceAndClasses.Items
         }
         public override void AddRecipes()
         {
-            Commons.QuckRecipe(mod, new int[,] { { mod.ItemType("ClassToken_Summoner"), 1 }, {mod.ItemType("Monster_Orb"), 10} }, this, 1, new Recipes.ClassRecipes(mod, tier));
-            Commons.QuckRecipe(mod, new int[,] { { mod.ItemType("ClassToken_Hybrid"), 1 }, { mod.ItemType("Monster_Orb"), 10 } }, this, 1, new Recipes.ClassRecipes(mod, tier));
+            Commons.QuckRecipe(Mod, new int[,] { { Mod.Find<ModItem>("ClassToken_Summoner").Type, 1 }, {Mod.Find<ModItem>("Monster_Orb").Type, 10} }, this, 1, new Recipes.ClassRecipes(Mod, tier));
+            Commons.QuckRecipe(Mod, new int[,] { { Mod.Find<ModItem>("ClassToken_Hybrid").Type, 1 }, { Mod.Find<ModItem>("Monster_Orb").Type, 10 } }, this, 1, new Recipes.ClassRecipes(Mod, tier));
         }
     }
 
@@ -409,7 +409,7 @@ namespace ExperienceAndClasses.Items
         }
         public override void AddRecipes()
         {
-            Commons.QuckRecipe(mod, new int[,] { { mod.ItemType("ClassToken_Novice"), 1 }, { ItemID.GoldCoin, 1 } }, this, 1, new Recipes.ClassRecipes(mod, tier));
+            Commons.QuckRecipe(Mod, new int[,] { { Mod.Find<ModItem>("ClassToken_Novice").Type, 1 }, { ItemID.GoldCoin, 1 } }, this, 1, new Recipes.ClassRecipes(Mod, tier));
         }
     }
 
@@ -432,8 +432,8 @@ namespace ExperienceAndClasses.Items
         }
         public override void AddRecipes()
         {
-            Commons.QuckRecipe(mod, new int[,] { { mod.ItemType("ClassToken_Rogue"), 1 }, { ItemID.PlatinumCoin, 1 } }, this, 1, new Recipes.ClassRecipes(mod, tier));
-            Commons.QuckRecipe(mod, new int[,] { { mod.ItemType("ClassToken_Hybrid"), 1 }, { ItemID.PlatinumCoin, 1 } }, this, 1, new Recipes.ClassRecipes(mod, tier));
+            Commons.QuckRecipe(Mod, new int[,] { { Mod.Find<ModItem>("ClassToken_Rogue").Type, 1 }, { ItemID.PlatinumCoin, 1 } }, this, 1, new Recipes.ClassRecipes(Mod, tier));
+            Commons.QuckRecipe(Mod, new int[,] { { Mod.Find<ModItem>("ClassToken_Hybrid").Type, 1 }, { ItemID.PlatinumCoin, 1 } }, this, 1, new Recipes.ClassRecipes(Mod, tier));
         }
     }
 
@@ -451,8 +451,8 @@ namespace ExperienceAndClasses.Items
         }
         public override void AddRecipes()
         {
-            Commons.QuckRecipe(mod, new int[,] { { mod.ItemType("ClassToken_Rogue"), 1}, { ItemID.PlatinumCoin, 1} }, this, 1, new Recipes.ClassRecipes(mod, tier));
-            Commons.QuckRecipe(mod, new int[,] { { mod.ItemType("ClassToken_Hybrid"), 1 }, { ItemID.PlatinumCoin, 1 } }, this, 1, new Recipes.ClassRecipes(mod, tier));
+            Commons.QuckRecipe(Mod, new int[,] { { Mod.Find<ModItem>("ClassToken_Rogue").Type, 1}, { ItemID.PlatinumCoin, 1} }, this, 1, new Recipes.ClassRecipes(Mod, tier));
+            Commons.QuckRecipe(Mod, new int[,] { { Mod.Find<ModItem>("ClassToken_Hybrid").Type, 1 }, { ItemID.PlatinumCoin, 1 } }, this, 1, new Recipes.ClassRecipes(Mod, tier));
         }
     }
 
@@ -478,7 +478,7 @@ namespace ExperienceAndClasses.Items
         }
         public override void AddRecipes()
         {
-            Commons.QuckRecipe(mod, new int[,] { { mod.ItemType("ClassToken_Novice"), 1 }, { ItemID.LesserHealingPotion, 3} }, this, 1, new Recipes.ClassRecipes(mod, tier));
+            Commons.QuckRecipe(Mod, new int[,] { { Mod.Find<ModItem>("ClassToken_Novice").Type, 1 }, { ItemID.LesserHealingPotion, 3} }, this, 1, new Recipes.ClassRecipes(Mod, tier));
         }
     }
 
@@ -511,11 +511,11 @@ namespace ExperienceAndClasses.Items
         }
         public override void AddRecipes()
         {
-            Commons.QuckRecipe(mod, new int[,] { { mod.ItemType("ClassToken_Cleric"), 1 }, { ItemID.HeartLantern, 1},
-                { ItemID.StarinaBottle, 1},{ ItemID.Campfire, 10} }, this, 1, new Recipes.ClassRecipes(mod, tier));
+            Commons.QuckRecipe(Mod, new int[,] { { Mod.Find<ModItem>("ClassToken_Cleric").Type, 1 }, { ItemID.HeartLantern, 1},
+                { ItemID.StarinaBottle, 1},{ ItemID.Campfire, 10} }, this, 1, new Recipes.ClassRecipes(Mod, tier));
 
-            Commons.QuckRecipe(mod, new int[,] { { mod.ItemType("ClassToken_Hybrid"), 1 }, { ItemID.HeartLantern, 1},
-                { ItemID.StarinaBottle, 1},{ ItemID.Campfire, 10} }, this, 1, new Recipes.ClassRecipes(mod, tier));
+            Commons.QuckRecipe(Mod, new int[,] { { Mod.Find<ModItem>("ClassToken_Hybrid").Type, 1 }, { ItemID.HeartLantern, 1},
+                { ItemID.StarinaBottle, 1},{ ItemID.Campfire, 10} }, this, 1, new Recipes.ClassRecipes(Mod, tier));
         }
     }
 
@@ -532,7 +532,7 @@ namespace ExperienceAndClasses.Items
         }
         public override void AddRecipes()
         {
-            Commons.QuckRecipe(mod, new int[,] { { mod.ItemType("ClassToken_Novice"), 1 }, { ItemID.DirtBlock, 200 } }, this, 1, new Recipes.ClassRecipes(mod, tier));
+            Commons.QuckRecipe(Mod, new int[,] { { Mod.Find<ModItem>("ClassToken_Novice").Type, 1 }, { ItemID.DirtBlock, 200 } }, this, 1, new Recipes.ClassRecipes(Mod, tier));
         }
     }
 
@@ -549,7 +549,7 @@ namespace ExperienceAndClasses.Items
         }
         public override void AddRecipes()
         {
-            Commons.QuckRecipe(mod, new int[,] { {mod.ItemType("ClassToken_Hybrid"), 1}, { ItemID.DirtBlock, 999} }, this, 1, new Recipes.ClassRecipes(mod, tier));
+            Commons.QuckRecipe(Mod, new int[,] { {Mod.Find<ModItem>("ClassToken_Hybrid").Type, 1}, { ItemID.DirtBlock, 999} }, this, 1, new Recipes.ClassRecipes(Mod, tier));
         }
     }
 }

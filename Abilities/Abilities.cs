@@ -169,7 +169,7 @@ namespace ExperienceAndClasses.Abilities
                     upgrade_smite = ExperienceAndClasses.localMyPlayer.unlocked_abilities_current[(int)ID.Cleric_Upgrade_Heal_Smite];
 
                     //look for players/npcs
-                    Tuple<List<Tuple<bool, int, bool>>, int, int, bool, bool> target_info = FindTargets(ExperienceAndClasses.localMyPlayer.player, location, RANGE, true, true, true);
+                    Tuple<List<Tuple<bool, int, bool>>, int, int, bool, bool> target_info = FindTargets(ExperienceAndClasses.localMyPlayer.Player, location, RANGE, true, true, true);
                     nearest_friendly_index = target_info.Item2;
                     nearest_hostile_index = target_info.Item3;
                     nearest_friendly_is_player = target_info.Item4;
@@ -471,11 +471,11 @@ namespace ExperienceAndClasses.Abilities
                             //buff
                             if (ExperienceAndClasses.localMyPlayer.unlocked_abilities_current[(int)ID.Cleric_Upgrade_Sanctuary_HolyLight])
                             {
-                                Projectile.NewProjectile(myPlayer.player.Center, new Vector2(0f), ExperienceAndClasses.mod.ProjectileType<AbilityProj.Misc_PlayerStatus>(), myPlayer.player.whoAmI, 0, Main.LocalPlayer.whoAmI, (float)ExperienceAndClasses.STATUSES.HolyLight, BUFF_DURATION_SECONDS);
+                                Projectile.NewProjectile(myPlayer.Player.Center, new Vector2(0f), ExperienceAndClasses.mod.ProjectileType<AbilityProj.Misc_PlayerStatus>(), myPlayer.Player.whoAmI, 0, Main.LocalPlayer.whoAmI, (float)ExperienceAndClasses.STATUSES.HolyLight, BUFF_DURATION_SECONDS);
                             }
                             if (ExperienceAndClasses.localMyPlayer.unlocked_abilities_current[(int)ID.Cleric_Upgrade_Sanctuary_Blessing])
                             {
-                                Projectile.NewProjectile(myPlayer.player.Center, new Vector2(0f), ExperienceAndClasses.mod.ProjectileType<AbilityProj.Misc_PlayerStatus>(), myPlayer.player.whoAmI, heal, Main.LocalPlayer.whoAmI, (float)ExperienceAndClasses.STATUSES.Blessing, BUFF_DURATION_SECONDS);
+                                Projectile.NewProjectile(myPlayer.Player.Center, new Vector2(0f), ExperienceAndClasses.mod.ProjectileType<AbilityProj.Misc_PlayerStatus>(), myPlayer.Player.whoAmI, heal, Main.LocalPlayer.whoAmI, (float)ExperienceAndClasses.STATUSES.Blessing, BUFF_DURATION_SECONDS);
                             }
                         }
                     }
@@ -597,7 +597,7 @@ namespace ExperienceAndClasses.Abilities
                 Projectile.NewProjectile(location, new Vector2(0f), ExperienceAndClasses.mod.ProjectileType<DustMakerProj>(), 0, 0, Main.LocalPlayer.whoAmI, (float)DustMakerProj.MODE.DIVINE_INTERVENTION, range);
 
                 //look for players/npcs
-                Tuple<List<Tuple<bool, int, bool>>, int, int, bool, bool> target_info = FindTargets(ExperienceAndClasses.localMyPlayer.player, location, range, true, true, false, true, false);
+                Tuple<List<Tuple<bool, int, bool>>, int, int, bool, bool> target_info = FindTargets(ExperienceAndClasses.localMyPlayer.Player, location, range, true, true, false, true, false);
                 List<Tuple<bool, int, bool>> targets = target_info.Item1;
                 MyPlayer myPlayer;
                 float duration_use;

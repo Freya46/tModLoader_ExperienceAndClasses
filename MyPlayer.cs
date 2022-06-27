@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using Terraria;
+using Terraria.Chat;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
@@ -119,9 +120,9 @@ namespace ExperienceAndClasses
             status_visuals_projectile_ids = new int[(int)ExperienceAndClasses.STATUSES.COUNT];
 
             //define status visuals
-            status_visuals_projectile_ids[(int)ExperienceAndClasses.STATUSES.Blessing] = mod.ProjectileType<Abilities.AbilityProj.Status_Cleric_Blessing>();
-            status_visuals_projectile_ids[(int)ExperienceAndClasses.STATUSES.Paragon] = mod.ProjectileType<Abilities.AbilityProj.Status_Cleric_Paragon>();
-            status_visuals_projectile_ids[(int)ExperienceAndClasses.STATUSES.Renew] = mod.ProjectileType<Abilities.AbilityProj.Status_Cleric_Paragon_Renew>();
+            status_visuals_projectile_ids[(int)ExperienceAndClasses.STATUSES.Blessing] = Mod.ProjectileType<Abilities.AbilityProj.Status_Cleric_Blessing>();
+            status_visuals_projectile_ids[(int)ExperienceAndClasses.STATUSES.Paragon] = Mod.ProjectileType<Abilities.AbilityProj.Status_Cleric_Paragon>();
+            status_visuals_projectile_ids[(int)ExperienceAndClasses.STATUSES.Renew] = Mod.ProjectileType<Abilities.AbilityProj.Status_Cleric_Paragon_Renew>();
         }
 
         /// <summary>
@@ -144,7 +145,7 @@ namespace ExperienceAndClasses
             {
                 if (force)
                 {
-                    Methods.PacketSender.ClientTellAddExp(mod, xp);
+                    Methods.PacketSender.ClientTellAddExp(Mod, xp);
                 }
                 else
                 {
@@ -174,7 +175,7 @@ namespace ExperienceAndClasses
             double priorExp = GetExp();
             if (Main.netMode == 2 && priorExp == -1)
             {
-                NetMessage.BroadcastChatMessage(NetworkText.FromLiteral("Failed to change the experience value for player #" +player.whoAmI+":"+player.name +" (player not yet synced)"), ExperienceAndClasses.MESSAGE_COLOUR_RED);
+                ChatHelper.BroadcastChatMessage(NetworkText.FromLiteral("Failed to change the experience value for player #" +Player.whoAmI+":"+Player.name +" (player not yet synced)"), ExperienceAndClasses.MESSAGE_COLOUR_RED);
                 return;
             }
 
@@ -184,10 +185,10 @@ namespace ExperienceAndClasses
             LevelUp(priorLevel);
 
             //if server, mark for update
-            if (Main.netMode == 2 && !MyWorld.clientNeedsExpUpdate[player.whoAmI])
+            if (Main.netMode == 2 && !MyWorld.clientNeedsExpUpdate[Player.whoAmI])
             {
-                MyWorld.clientNeedsExpUpdate[player.whoAmI] = true;
-                MyWorld.clientNeedsExpUpdate_who[MyWorld.clientNeedsExpUpdate_counter] = player.whoAmI;
+                MyWorld.clientNeedsExpUpdate[Player.whoAmI] = true;
+                MyWorld.clientNeedsExpUpdate_who[MyWorld.clientNeedsExpUpdate_counter] = Player.whoAmI;
                 MyWorld.clientNeedsExpUpdate_counter++;
             }
             //if singleplayer, it's already done so display
@@ -222,21 +223,21 @@ namespace ExperienceAndClasses
             if (level != priorLevel)
             {
                 //if server, full sync immediately
-                if (Main.netMode == 2) Methods.PacketSender.ServerSyncExp(mod, true);
+                if (Main.netMode == 2) Methods.PacketSender.ServerSyncExp(Mod, true);
 
                 if (level > priorLevel)
                 {
                     if (Main.netMode == 0)
                         Main.NewText("You have reached level " + level + "!");
                     else
-                        NetMessage.BroadcastChatMessage(NetworkText.FromLiteral(player.name + " has reached level " + level + "!"), ExperienceAndClasses.MESSAGE_COLOUR_GREEN);
+                        ChatHelper.BroadcastChatMessage(NetworkText.FromLiteral(Player.name + " has reached level " + level + "!"), ExperienceAndClasses.MESSAGE_COLOUR_GREEN);
                 }
                 else if (level < priorLevel)
                 {
                     if (Main.netMode == 0)
                         Main.NewText("You has fallen to level " + level + "!");
                     else
-                        NetMessage.BroadcastChatMessage(NetworkText.FromLiteral(player.name + " has dropped to level " + level + "!"), ExperienceAndClasses.MESSAGE_COLOUR_RED);
+                        ChatHelper.BroadcastChatMessage(NetworkText.FromLiteral(Player.name + " has dropped to level " + level + "!"), ExperienceAndClasses.MESSAGE_COLOUR_RED);
                 }
             }
         }
@@ -247,20 +248,20 @@ namespace ExperienceAndClasses
         /// <param name="experienceChange"></param>
         public void ExpMsg(double experienceChange, bool offlineChunk = false)
         {
-            if (!Main.LocalPlayer.Equals(player) || Main.netMode==2) return;
+            if (!Main.LocalPlayer.Equals(Player) || Main.netMode==2) return;
 
             if (((experienceChange > 0) || offlineChunk) && displayExp)
             {
                 if (Main.netMode == 1)
                 {
                     //Main.NewText("You have earned " + Math.Round(experienceChange) + " experience.", ExperienceAndClasses.MESSAGE_COLOUR_GREEN);
-                    CombatText.NewText(player.getRect(), ExperienceAndClasses.MESSAGE_COLOUR_GREEN, "+" + Math.Round(experienceChange) + "XP");
+                    CombatText.NewText(Player.getRect(), ExperienceAndClasses.MESSAGE_COLOUR_GREEN, "+" + Math.Round(experienceChange) + "XP");
                 }
                 else if (Main.netMode == 0)
                 {
                     if (offlineChunk)
                     {
-                        CombatText.NewText(player.getRect(), ExperienceAndClasses.MESSAGE_COLOUR_GREEN, "+" + Math.Round(offlineXPChunk) + "XP");
+                        CombatText.NewText(Player.getRect(), ExperienceAndClasses.MESSAGE_COLOUR_GREEN, "+" + Math.Round(offlineXPChunk) + "XP");
                         offlineXPChunk = 0;
                     }
                     else
@@ -272,7 +273,7 @@ namespace ExperienceAndClasses
             else if (experienceChange<0)
             {
                 //Main.NewText("You have lost " + Math.Round(experienceChange * -1) + " experience.", ExperienceAndClasses.MESSAGE_COLOUR_RED);
-                CombatText.NewText(player.getRect(), ExperienceAndClasses.MESSAGE_COLOUR_RED, Math.Round(experienceChange) + "XP");
+                CombatText.NewText(Player.getRect(), ExperienceAndClasses.MESSAGE_COLOUR_RED, Math.Round(experienceChange) + "XP");
             }
         }
 
@@ -297,7 +298,7 @@ namespace ExperienceAndClasses
         }
 
         //save xp
-        public override TagCompound Save()
+        public override void SaveData(TagCompound tag)/* tModPorter Suggestion: Edit tag parameter instead of returning new TagCompound */
         {
             UILeft = UI.UIExp.GetLeft();
             UITop = UI.UIExp.GetTop();
@@ -335,7 +336,7 @@ namespace ExperienceAndClasses
         }
 
         //load xp
-        public override void Load(TagCompound tag)
+        public override void LoadData(TagCompound tag)
         {
             //load exp
             experience = Commons.TryGet<double>(tag, "experience", 0);
@@ -371,7 +372,7 @@ namespace ExperienceAndClasses
         public override void SetupStartInventory(IList<Item> items)
         {
             Item item = new Item();
-            item.SetDefaults(mod.ItemType("ClassToken_Novice"));
+            item.SetDefaults(Mod.Find<ModItem>("ClassToken_Novice").Type);
             item.stack = 1;
             items.Add(item);
 
@@ -391,7 +392,7 @@ namespace ExperienceAndClasses
                 if (experience < 0) //occurs when a player who does not have the mod joins a server that uses the mod
                 {
                     experience = 0;
-                    player.PutItemInInventory(mod.ItemType("ClassToken_Novice"));
+                    player.PutItemInInventory(Mod.Find<ModItem>("ClassToken_Novice").Type);
                 }
 
                 UI.UIExp.Init(this);
@@ -404,7 +405,7 @@ namespace ExperienceAndClasses
                 //settings if singleplayer
                 if (Main.netMode == 0)
                 {
-                    Methods.ChatCommands.CommandDisplaySettings(mod);
+                    Methods.ChatCommands.CommandDisplaySettings(Mod);
                 }
             }
 
@@ -438,7 +439,7 @@ namespace ExperienceAndClasses
             //apply class effects
             foreach (var i in classTokensEquipped)
             {
-                Items.Helpers.ClassTokenEffects(mod, player, i.Item1, i.Item2, true, this);
+                Items.Helpers.ClassTokenEffects(Mod, Player, i.Item1, i.Item2, true, this);
             }
 
             //calculate effective level for bonuses and abilities
@@ -455,7 +456,7 @@ namespace ExperienceAndClasses
             effectiveLevel = (int)Math.Floor((double)effectiveLevel / numberClasses);
 
             //self only ability stuff
-            if ((player.whoAmI == Main.LocalPlayer.whoAmI) && (Main.netMode != 2))
+            if ((Player.whoAmI == Main.LocalPlayer.whoAmI) && (Main.netMode != 2))
             {
                 //set current abilities
                 unlocked_abilities_current = unlocked_abilities_next;
@@ -499,12 +500,12 @@ namespace ExperienceAndClasses
                             }
 
                             //one-time cure
-                            player.buffImmune[ExperienceAndClasses.DEBUFFS[i]] = true;
+                            Player.buffImmune[ExperienceAndClasses.DEBUFFS[i]] = true;
                         }
                         else
                         {
                             //message
-                            if (!debuff_immunity_active[i] && !player.buffImmune[ExperienceAndClasses.DEBUFFS[i]])
+                            if (!debuff_immunity_active[i] && !Player.buffImmune[ExperienceAndClasses.DEBUFFS[i]])
                             {
                                 if (message_gain.Length > 0)
                                 {
@@ -530,7 +531,7 @@ namespace ExperienceAndClasses
                             debuff_immunity_active[i] = false;
 
                             //message
-                            if (!player.buffImmune[ExperienceAndClasses.DEBUFFS[i]])
+                            if (!Player.buffImmune[ExperienceAndClasses.DEBUFFS[i]])
                             {
                                 if (message_lose.Length > 0)
                                 {
@@ -542,7 +543,7 @@ namespace ExperienceAndClasses
                         else
                         {
                             //grant immunity
-                            player.buffImmune[ExperienceAndClasses.DEBUFFS[i]] = true;
+                            Player.buffImmune[ExperienceAndClasses.DEBUFFS[i]] = true;
                         }
                     }
                 }
@@ -564,7 +565,7 @@ namespace ExperienceAndClasses
                 int count_immunities = 0;
                 foreach (int i in ExperienceAndClasses.DEBUFFS)
                 {
-                    if (player.buffImmune[i])
+                    if (Player.buffImmune[i])
                         count_immunities++;
                 }
                 float heal_power_bonus = count_immunities * ExperienceAndClasses.HEAL_POWER_PER_IMMUNITY;
@@ -576,7 +577,7 @@ namespace ExperienceAndClasses
             //status system
             bool do_sync = false;
             bool draw_visual = false;
-            if (ExperienceAndClasses.sync_local_status && (player.whoAmI == Main.LocalPlayer.whoAmI))
+            if (ExperienceAndClasses.sync_local_status && (Player.whoAmI == Main.LocalPlayer.whoAmI))
             {
                 do_sync = true;
                 ExperienceAndClasses.sync_local_status = false;
@@ -609,7 +610,7 @@ namespace ExperienceAndClasses
                         {
                             status_new[i] = false;
                             //visual, if any
-                            if (player.whoAmI == Main.LocalPlayer.whoAmI)
+                            if (Player.whoAmI == Main.LocalPlayer.whoAmI)
                             {
                                 //default to true if any
                                 draw_visual = (status_visuals_projectile_ids[i] > 0);
@@ -624,7 +625,7 @@ namespace ExperienceAndClasses
                                 //draw
                                 if (draw_visual)
                                 {
-                                    Projectile.NewProjectile(player.Center, new Vector2(0f), status_visuals_projectile_ids[i], 0, 0, player.whoAmI);
+                                    Projectile.NewProjectile(Player.Center, new Vector2(0f), status_visuals_projectile_ids[i], 0, 0, Player.whoAmI);
                                 }
                             }
                         }
@@ -633,10 +634,10 @@ namespace ExperienceAndClasses
                         switch ((ExperienceAndClasses.STATUSES)i)
                         {
                             case (ExperienceAndClasses.STATUSES.DivineIntervention):
-                                player.immune = true;
+                                Player.immune = true;
                                 break;
                             case (ExperienceAndClasses.STATUSES.HolyLight):
-                                Lighting.AddLight(player.Top, Abilities.AbilityMain.Cleric_Active_Sanctuary.BUFF_LIGHT_COLOUR);
+                                Lighting.AddLight(Player.Top, Abilities.AbilityMain.Cleric_Active_Sanctuary.BUFF_LIGHT_COLOUR);
                                 break;
                             default:
                                 //do nothing
@@ -646,7 +647,7 @@ namespace ExperienceAndClasses
                         //sync
                         if (do_sync)
                         {
-                            Projectile.NewProjectile(player.Center, new Vector2(0.1f), mod.ProjectileType<Abilities.AbilityProj.Misc_PlayerStatus>(), player.whoAmI, status_magnitude[i], player.whoAmI, i, (float)status_end_time[i].Subtract(now).TotalSeconds);
+                            Projectile.NewProjectile(Player.Center, new Vector2(0.1f), Mod.ProjectileType<Abilities.AbilityProj.Misc_PlayerStatus>(), Player.whoAmI, status_magnitude[i], Player.whoAmI, i, (float)status_end_time[i].Subtract(now).TotalSeconds);
                         }
                     }
                 }
@@ -681,14 +682,14 @@ namespace ExperienceAndClasses
             }
 
             //self stuff
-            if (Main.LocalPlayer.Equals(player))
+            if (Main.LocalPlayer.Equals(Player))
             {
                 //check if afk
                 if (!afk && allowAFK && (Main.netMode != 2) && (now.AddSeconds(-ExperienceAndClasses.AFK_TIME_TICKS_SEC).CompareTo(afkTime) > 0))
                 {
                     if (Main.netMode == 0) Main.NewText("You are now AFK. You will not recieve death penalties to experience but you cannot gain experience either.", ExperienceAndClasses.MESSAGE_COLOUR_RED);
                     afk = true;
-                    Methods.PacketSender.ClientAFK(mod);
+                    Methods.PacketSender.ClientAFK(Mod);
                 }
 
                 //TEMPORARY: select first 4 actives
@@ -821,7 +822,7 @@ namespace ExperienceAndClasses
                 //if ready, add phase
                 if (ready)
                 {
-                    player.AddBuff(mod.BuffType<Buffs.Buff_OpenerPhase>(), 1);
+                    Player.AddBuff(Mod.BuffType<Buffs.Buff_OpenerPhase>(), 1);
                     openerImmuneEnd = now.AddMilliseconds(openerImmuneTime_msec);
                 }
 
@@ -841,8 +842,8 @@ namespace ExperienceAndClasses
             timeLastAttack = now;
 
             //remove buff
-            int buffInd = player.FindBuffIndex(mod.BuffType<Buffs.Buff_OpenerAttack>());
-            if (buffInd != -1) player.DelBuff(buffInd);
+            int buffInd = Player.FindBuffIndex(Mod.BuffType<Buffs.Buff_OpenerAttack>());
+            if (buffInd != -1) Player.DelBuff(buffInd);
 
             //base
             base.ModifyHitNPC(item, target, ref damage, ref knockback, ref crit);
@@ -857,12 +858,12 @@ namespace ExperienceAndClasses
             DateTime now = DateTime.Now;
             Item item = Main.player[proj.owner].HeldItem;
             bool ready = timeLastAttack.AddMilliseconds(openerTime_msec).CompareTo(now) <= 0;
-            if (openerBonusPct > 0 && Items.Helpers.HeldYoyo(player) && (ready || target.life == target.lifeMax))
+            if (openerBonusPct > 0 && Items.Helpers.HeldYoyo(Player) && (ready || target.life == target.lifeMax))
             {
                 //if ready, add phase
                 if (ready)
                 {
-                    player.AddBuff(mod.BuffType<Buffs.Buff_OpenerPhase>(), 2);
+                    Player.AddBuff(Mod.BuffType<Buffs.Buff_OpenerPhase>(), 2);
                     openerImmuneEnd = now.AddMilliseconds(openerImmuneTime_msec);
                 }
 
@@ -877,24 +878,24 @@ namespace ExperienceAndClasses
             timeLastAttack = now;
 
             //flex time for point-blank melee weapons that have a projectile
-            if (openerBonusPct > 0 && !Items.Helpers.HeldYoyo(player)) timeLastAttack.AddMilliseconds(-50);
+            if (openerBonusPct > 0 && !Items.Helpers.HeldYoyo(Player)) timeLastAttack.AddMilliseconds(-50);
 
             //remove buff
-            int buffInd = player.FindBuffIndex(mod.BuffType<Buffs.Buff_OpenerAttack>());
-            if (buffInd != -1) player.DelBuff(buffInd);
+            int buffInd = Player.FindBuffIndex(Mod.BuffType<Buffs.Buff_OpenerAttack>());
+            if (buffInd != -1) Player.DelBuff(buffInd);
 
             //base
             base.ModifyHitNPCWithProj(proj, target, ref damage, ref knockback, ref crit, ref hitDirection);
         }
 
-        public override void DrawEffects(PlayerDrawInfo drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
+        public override void DrawEffects(PlayerDrawSet drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
         {
-            int buffInd = player.FindBuffIndex(mod.BuffType<Buffs.Buff_OpenerAttack>());
+            int buffInd = Player.FindBuffIndex(Mod.BuffType<Buffs.Buff_OpenerAttack>());
             if (buffInd != -1)
             {
                 if (Main.rand.Next(5) == 0 && drawInfo.shadow == 0f)
                 {
-                    int dust = Dust.NewDust(drawInfo.position - new Vector2(2f, 2f), player.width + 4, player.height + 4, mod.DustType("Dust_OpenerAttack"), player.velocity.X * 0.4f, player.velocity.Y * 0.4f, 100, default(Color), 3f);
+                    int dust = Dust.NewDust(drawInfo.position - new Vector2(2f, 2f), Player.width + 4, Player.height + 4, Mod.Find<ModDust>("Dust_OpenerAttack").Type, Player.velocity.X * 0.4f, Player.velocity.Y * 0.4f, 100, default(Color), 3f);
                     Main.dust[dust].noGravity = true;
                     Main.dust[dust].velocity *= 1.8f;
                     Main.dust[dust].velocity.Y -= 0.5f;
@@ -907,14 +908,14 @@ namespace ExperienceAndClasses
         public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
         {
             //% dodge chance (shadow dodge and ninja dodge both use 80 ticks so I used that here)
-            if (Main.LocalPlayer.Equals(player))
+            if (Main.LocalPlayer.Equals(Player))
             {
                 if (dodgeChancePct > 0 && Main.rand.Next(100) < dodgeChancePct)
                 {
-                    player.immune = true;
-                    player.immuneTime = 80;
-                    player.NinjaDodge();
-                    NetMessage.SendData(62, -1, -1, null, player.whoAmI, 2f, 0f, 0f, 0, 0, 0); //might not work anymore
+                    Player.immune = true;
+                    Player.immuneTime = 80;
+                    Player.NinjaDodge();
+                    NetMessage.SendData(62, -1, -1, null, Player.whoAmI, 2f, 0f, 0f, 0, 0, 0); //might not work anymore
                     return false;
                 }
             }
@@ -932,7 +933,7 @@ namespace ExperienceAndClasses
             {
                 if (Main.netMode == 0) Main.NewText("You are no longer AFK.", ExperienceAndClasses.MESSAGE_COLOUR_RED);
                 afk = false;
-                Methods.PacketSender.ClientUnAFK(mod);
+                Methods.PacketSender.ClientUnAFK(Mod);
             }
 
             base.OnHitAnything(x, y, victim);
@@ -946,10 +947,10 @@ namespace ExperienceAndClasses
             base.Hurt(pvp, quiet, damage, hitDirection, crit);
 
             //sanctuary buff heal
-            if (!player.dead && status_active[(int)ExperienceAndClasses.STATUSES.Blessing])
+            if (!Player.dead && status_active[(int)ExperienceAndClasses.STATUSES.Blessing])
             {
                 //heal
-                Projectile.NewProjectile(player.Center, new Vector2(0f), ExperienceAndClasses.mod.ProjectileType<Abilities.AbilityProj.Misc_HealHurt>(), (int)status_magnitude[(int)ExperienceAndClasses.STATUSES.Blessing], 0, Main.LocalPlayer.whoAmI, 1, Main.LocalPlayer.whoAmI);
+                Projectile.NewProjectile(Player.Center, new Vector2(0f), ExperienceAndClasses.mod.ProjectileType<Abilities.AbilityProj.Misc_HealHurt>(), (int)status_magnitude[(int)ExperienceAndClasses.STATUSES.Blessing], 0, Main.LocalPlayer.whoAmI, 1, Main.LocalPlayer.whoAmI);
                 //remove
                 EndStatus((int)ExperienceAndClasses.STATUSES.Blessing);
             }
@@ -958,7 +959,7 @@ namespace ExperienceAndClasses
         public override void ProcessTriggers(TriggersSet triggersSet) //CLIENT-SIDE ONLY
         {
             //prevent weapon use after 
-            if (triggersSet.MouseLeft && itemUsePrevented && ((player.HeldItem.damage > 0) || player.HeldItem.useStyle==1 || player.HeldItem.useStyle == 3 || player.HeldItem.useStyle == 5)) player.controlUseItem = false;
+            if (triggersSet.MouseLeft && itemUsePrevented && ((Player.HeldItem.damage > 0) || Player.HeldItem.useStyle==1 || Player.HeldItem.useStyle == 3 || Player.HeldItem.useStyle == 5)) Player.controlUseItem = false;
 
             //track afk
             if (Main.netMode != 2 && (triggersSet.MouseLeft || triggersSet.MouseMiddle || triggersSet.MouseRight || triggersSet.Jump || triggersSet.Up || triggersSet.Down || triggersSet.Left || triggersSet.Right))
@@ -968,7 +969,7 @@ namespace ExperienceAndClasses
                 {
                     if (Main.netMode == 0) Main.NewText("You are no longer AFK.", ExperienceAndClasses.MESSAGE_COLOUR_RED);
                     afk = false;
-                    Methods.PacketSender.ClientUnAFK(mod);
+                    Methods.PacketSender.ClientUnAFK(Mod);
                 }
             }
 
@@ -1068,7 +1069,7 @@ namespace ExperienceAndClasses
 
         public void OffCooldownMessage(string abilityName)
         {
-            CombatText.NewText(player.getRect(), ExperienceAndClasses.MESSAGE_COLOUR_OFF_COOLDOWN, abilityName + " Ready!");
+            CombatText.NewText(Player.getRect(), ExperienceAndClasses.MESSAGE_COLOUR_OFF_COOLDOWN, abilityName + " Ready!");
         }
 
         public static void GrantDebuffImunity(int index, DateTime time_start, double duration_seconds)
@@ -1091,7 +1092,7 @@ namespace ExperienceAndClasses
 
         public bool HasImmunityItem()
         {
-            foreach (Item i in player.armor)
+            foreach (Item i in Player.armor)
             {
                 if (i.Name.Length > 0 && (i.Name.Equals("Cross Necklace") || i.Name.Equals("Star Veil")))
                 {
@@ -1108,10 +1109,10 @@ namespace ExperienceAndClasses
             status_new[index] = false;
             status_end_time[index] = DateTime.MinValue;
             status_magnitude[index] = 0;
-            if (player.whoAmI == Main.LocalPlayer.whoAmI)
+            if (Player.whoAmI == Main.LocalPlayer.whoAmI)
             {
                 //local, sync effect ending
-                Projectile.NewProjectile(player.Center, new Vector2(0.1f), mod.ProjectileType<Abilities.AbilityProj.Misc_PlayerStatus>(), player.whoAmI, 0, player.whoAmI, index, -1);
+                Projectile.NewProjectile(Player.Center, new Vector2(0.1f), Mod.ProjectileType<Abilities.AbilityProj.Misc_PlayerStatus>(), Player.whoAmI, 0, Player.whoAmI, index, -1);
             }
         }
 

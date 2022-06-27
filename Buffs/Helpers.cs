@@ -19,14 +19,14 @@ namespace ExperienceAndClasses.Buffs
             if (typeof(T) == typeof(Player))
             {
                 Player player = (target as Player);
-                buff2 = player.FindBuffIndex(mod.BuffType("Aura_Defense2")) != -1;
-                buff3 = player.FindBuffIndex(mod.BuffType("Aura_Defense3")) != -1;
+                buff2 = player.FindBuffIndex(mod.Find<ModBuff>("Aura_Defense2").Type) != -1;
+                buff3 = player.FindBuffIndex(mod.Find<ModBuff>("Aura_Defense3").Type) != -1;
             }
             else if (typeof(T) == typeof(NPC))
             {
                 NPC npc = (target as NPC);
-                buff2 = npc.FindBuffIndex(mod.BuffType("Aura_Defense2")) != -1;
-                buff3 = npc.FindBuffIndex(mod.BuffType("Aura_Defense3")) != -1;
+                buff2 = npc.FindBuffIndex(mod.Find<ModBuff>("Aura_Defense2").Type) != -1;
+                buff3 = npc.FindBuffIndex(mod.Find<ModBuff>("Aura_Defense3").Type) != -1;
             }
 
             if ((tierNumber == 1 && (buff2 || buff3)) || (tierNumber == 2 && buff3))

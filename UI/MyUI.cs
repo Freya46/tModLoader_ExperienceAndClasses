@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
 using System;
@@ -269,9 +270,9 @@ namespace ExperienceAndClasses.UI
                 Vector2 textSize;
 
                 //text for level and percent exp
-                Utils.DrawBorderStringFourWay(spriteBatch, Main.fontMouseText, labelsExp[0], panel.Left.Pixels + TEXT_LEVEL_X, panel.Top.Pixels + TEXT_LEVEL_Y, COLOUR_TEXT_INNER, COLOUR_TEXT_OUTTER, ORIGIN, SCALE_MAIN);
-                textSize = Main.fontMouseText.MeasureString(labelsExp[1]) * SCALE_MAIN;
-                Utils.DrawBorderStringFourWay(spriteBatch, Main.fontMouseText, labelsExp[1], panel.Left.Pixels + TEXT_PCT_X - textSize.X, panel.Top.Pixels + TEXT_PCT_Y, COLOUR_TEXT_INNER, COLOUR_TEXT_OUTTER, ORIGIN, SCALE_MAIN);
+                Utils.DrawBorderStringFourWay(spriteBatch, FontAssets.MouseText.Value, labelsExp[0], panel.Left.Pixels + TEXT_LEVEL_X, panel.Top.Pixels + TEXT_LEVEL_Y, COLOUR_TEXT_INNER, COLOUR_TEXT_OUTTER, ORIGIN, SCALE_MAIN);
+                textSize = FontAssets.MouseText.Value.MeasureString(labelsExp[1]) * SCALE_MAIN;
+                Utils.DrawBorderStringFourWay(spriteBatch, FontAssets.MouseText.Value, labelsExp[1], panel.Left.Pixels + TEXT_PCT_X - textSize.X, panel.Top.Pixels + TEXT_PCT_Y, COLOUR_TEXT_INNER, COLOUR_TEXT_OUTTER, ORIGIN, SCALE_MAIN);
 
                 //text for each bar
                 float barCenter;
@@ -279,21 +280,21 @@ namespace ExperienceAndClasses.UI
                 {
                     if (labelsBars[0, i] != null)
                     {
-                        textSize = Main.fontMouseText.MeasureString(labelsBars[0, i]) * SCALE_SMALL;
-                        Utils.DrawBorderStringFourWay(spriteBatch, Main.fontMouseText, labelsBars[0, i], panel.Left.Pixels + TEXT_ABILITY_X - (textSize.X / 2), panel.Top.Pixels + bars[i].top + TEXT_ABILITY_Y_DOWN, COLOUR_TEXT_INNER, COLOUR_TEXT_OUTTER, ORIGIN, SCALE_SMALL);
+                        textSize = FontAssets.MouseText.Value.MeasureString(labelsBars[0, i]) * SCALE_SMALL;
+                        Utils.DrawBorderStringFourWay(spriteBatch, FontAssets.MouseText.Value, labelsBars[0, i], panel.Left.Pixels + TEXT_ABILITY_X - (textSize.X / 2), panel.Top.Pixels + bars[i].top + TEXT_ABILITY_Y_DOWN, COLOUR_TEXT_INNER, COLOUR_TEXT_OUTTER, ORIGIN, SCALE_SMALL);
                     }
                     if (labelsBars[1, i] != null)
                     {
                         barCenter = bars[i].left + (bars[i].width / 2);
-                        textSize = Main.fontMouseText.MeasureString(labelsBars[1, i]) * SCALE_SMALL;
-                        Utils.DrawBorderStringFourWay(spriteBatch, Main.fontMouseText, labelsBars[1, i], panel.Left.Pixels + barCenter - (textSize.X / 2), panel.Top.Pixels + bars[i].top + TEXT_ABILITY_Y_DOWN, COLOUR_TEXT_INNER, COLOUR_TEXT_OUTTER, ORIGIN, SCALE_SMALL);
+                        textSize = FontAssets.MouseText.Value.MeasureString(labelsBars[1, i]) * SCALE_SMALL;
+                        Utils.DrawBorderStringFourWay(spriteBatch, FontAssets.MouseText.Value, labelsBars[1, i], panel.Left.Pixels + barCenter - (textSize.X / 2), panel.Top.Pixels + bars[i].top + TEXT_ABILITY_Y_DOWN, COLOUR_TEXT_INNER, COLOUR_TEXT_OUTTER, ORIGIN, SCALE_SMALL);
                     }
                 }
 
                 //kill counter
                 if (localMyPlayer.show_kill_count)
                 {
-                    Utils.DrawBorderStringFourWay(spriteBatch, Main.fontMouseText, "Kill Count: " + localMyPlayer.kill_count, panel.Left.Pixels + TEXT_LEVEL_X, panel.Top.Pixels + bars[numberActiveBars-1].top + PANEL_HEIGHT_PER_BAR, COLOUR_TEXT_INNER, COLOUR_TEXT_OUTTER, ORIGIN, SCALE_SMALL);
+                    Utils.DrawBorderStringFourWay(spriteBatch, FontAssets.MouseText.Value, "Kill Count: " + localMyPlayer.kill_count, panel.Left.Pixels + TEXT_LEVEL_X, panel.Top.Pixels + bars[numberActiveBars-1].top + PANEL_HEIGHT_PER_BAR, COLOUR_TEXT_INNER, COLOUR_TEXT_OUTTER, ORIGIN, SCALE_SMALL);
                 }
             }
         }

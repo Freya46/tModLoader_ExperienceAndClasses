@@ -35,15 +35,15 @@ namespace ExperienceAndClasses.Items
 
             //info
             //item.toolTip = "Worth " + (ExperienceAndClasses.EXP_ITEM_VALUE * orbValue) + " experience.";
-            item.width = 29;
-            item.height = 30;
-            item.maxStack = 9999999;
-            item.value = 0;
-            item.rare = 7;
-            item.consumable = true;
-            item.useAnimation = 10;
-            item.useTime = 10;
-            item.useStyle = 4;
+            Item.width = 29;
+            Item.height = 30;
+            Item.maxStack = 9999999;
+            Item.value = 0;
+            Item.rare = 7;
+            Item.consumable = true;
+            Item.useAnimation = 10;
+            Item.useTime = 10;
+            Item.useStyle = 4;
         }
 
         public override void AddRecipes()
@@ -56,20 +56,20 @@ namespace ExperienceAndClasses.Items
                 {
                     if (i>1)
                     {
-                        Commons.QuckRecipe(mod, new int[,] { { mod.ItemType("Experience"+i), 1 } }, this, i);
+                        Commons.QuckRecipe(Mod, new int[,] { { Mod.Find<ModItem>("Experience"+i).Type, 1 } }, this, i);
                     }
                 }
             }
             else
             {
                 //convert up from 1's
-                Commons.QuckRecipe(mod, new int[,] { {mod.ItemType<Experience>(), orbValue } }, this, 1);
+                Commons.QuckRecipe(Mod, new int[,] { {Mod.ItemType<Experience>(), orbValue } }, this, 1);
             }
             
             //exp-to-orb conversion
-            Commons.QuckRecipe(mod, new int[,] { { } }, this, 1, new Recipes.ExpRecipe(mod, ExperienceAndClasses.EXP_ITEM_VALUE * orbValue), TileID.Campfire);
+            Commons.QuckRecipe(Mod, new int[,] { { } }, this, 1, new Recipes.ExpRecipe(Mod, ExperienceAndClasses.EXP_ITEM_VALUE * orbValue), TileID.Campfire);
         }
-        public override bool UseItem(Player player)
+        public override bool? UseItem(Player player)/* tModPorter Suggestion: Return null instead of false */
         {
             if (player.whoAmI == Main.LocalPlayer.whoAmI)
             {
@@ -81,12 +81,12 @@ namespace ExperienceAndClasses.Items
         /* Bypass MaxStacks */
         public override void OnCraft(Recipe recipe)
         {
-            item.maxStack = 9999999;
+            Item.maxStack = 9999999;
             base.OnCraft(recipe);
         }
         public override void UpdateInventory(Player player)
         {
-            item.maxStack = 9999999;
+            Item.maxStack = 9999999;
             base.UpdateInventory(player);
         }
     }
@@ -175,18 +175,18 @@ namespace ExperienceAndClasses.Items
 
         public override void SetDefaults()
         {
-            item.width = 29;
-            item.height = 30;
-            item.maxStack = 9999999;
-            item.value = 50000;
-            item.rare = 10;
-            item.consumable = true;
-            item.useAnimation = 10;
-            item.useTime = 10;
-            item.useStyle = 4;
+            Item.width = 29;
+            Item.height = 30;
+            Item.maxStack = 9999999;
+            Item.value = 50000;
+            Item.rare = 10;
+            Item.consumable = true;
+            Item.useAnimation = 10;
+            Item.useTime = 10;
+            Item.useStyle = 4;
         }
 
-        public override bool UseItem(Player player)
+        public override bool? UseItem(Player player)/* tModPorter Suggestion: Return null instead of false */
         {
             if (player.whoAmI == Main.LocalPlayer.whoAmI)
             {
@@ -198,19 +198,19 @@ namespace ExperienceAndClasses.Items
         /* Bypass MaxStacks */
         public override void OnCraft(Recipe recipe)
         {
-            item.maxStack = 9999999;
+            Item.maxStack = 9999999;
             base.OnCraft(recipe);
         }
         public override void UpdateInventory(Player player)
         {
-            item.maxStack = 9999999;
+            Item.maxStack = 9999999;
             base.UpdateInventory(player);
         }
 
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            TooltipLine line = new TooltipLine(mod, "desc", "Current XP Value: " + ExperienceAndClasses.localMyPlayer.GetBossOrbXP());
-            line.overrideColor = Color.LimeGreen;
+            TooltipLine line = new TooltipLine(Mod, "desc", "Current XP Value: " + ExperienceAndClasses.localMyPlayer.GetBossOrbXP());
+            line.OverrideColor = Color.LimeGreen;
             tooltips.Add(line);
         }
     }
@@ -226,30 +226,30 @@ namespace ExperienceAndClasses.Items
 
         public override void SetDefaults()
         {
-            item.width = 29;
-            item.height = 30;
-            item.maxStack = 9999999;
-            item.value = 25000;
-            item.rare = 9;
-            item.consumable = true;
-            item.useAnimation = 10;
-            item.useTime = 10;
-            item.useStyle = 4;
+            Item.width = 29;
+            Item.height = 30;
+            Item.maxStack = 9999999;
+            Item.value = 25000;
+            Item.rare = 9;
+            Item.consumable = true;
+            Item.useAnimation = 10;
+            Item.useTime = 10;
+            Item.useStyle = 4;
         }
 
         public override void AddRecipes()
         {
             //convert boss orb to ascension orb
-            Commons.QuckRecipe(mod, new int[,] { { mod.ItemType("Boss_Orb"), 1 } }, this, 3);
+            Commons.QuckRecipe(Mod, new int[,] { { Mod.Find<ModItem>("Boss_Orb").Type, 1 } }, this, 3);
 
             //alt recipe: gold
-            Commons.QuckRecipe(mod, new int[,] { { ItemID.LifeCrystal, 1 }, { ItemID.ManaCrystal, 1 }, { ItemID.GoldBar, 20 } }, this, 1);
+            Commons.QuckRecipe(Mod, new int[,] { { ItemID.LifeCrystal, 1 }, { ItemID.ManaCrystal, 1 }, { ItemID.GoldBar, 20 } }, this, 1);
 
             //alt recipe: plat
-            Commons.QuckRecipe(mod, new int[,] { { ItemID.LifeCrystal, 1 }, { ItemID.ManaCrystal, 1 }, { ItemID.PlatinumBar, 20 } }, this, 1);
+            Commons.QuckRecipe(Mod, new int[,] { { ItemID.LifeCrystal, 1 }, { ItemID.ManaCrystal, 1 }, { ItemID.PlatinumBar, 20 } }, this, 1);
         }
 
-        public override bool UseItem(Player player)
+        public override bool? UseItem(Player player)/* tModPorter Suggestion: Return null instead of false */
         {
             if (player.whoAmI == Main.LocalPlayer.whoAmI)
             {
@@ -261,19 +261,19 @@ namespace ExperienceAndClasses.Items
         /* Bypass MaxStacks */
         public override void OnCraft(Recipe recipe)
         {
-            item.maxStack = 9999999;
+            Item.maxStack = 9999999;
             base.OnCraft(recipe);
         }
         public override void UpdateInventory(Player player)
         {
-            item.maxStack = 9999999;
+            Item.maxStack = 9999999;
             base.UpdateInventory(player);
         }
 
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            TooltipLine line = new TooltipLine(mod, "desc2", "Current XP Value: " + ExperienceAndClasses.localMyPlayer.GetMonsterOrbXP());
-            line.overrideColor = Color.LimeGreen;
+            TooltipLine line = new TooltipLine(Mod, "desc2", "Current XP Value: " + ExperienceAndClasses.localMyPlayer.GetMonsterOrbXP());
+            line.OverrideColor = Color.LimeGreen;
             tooltips.Add(line);
         }
     }

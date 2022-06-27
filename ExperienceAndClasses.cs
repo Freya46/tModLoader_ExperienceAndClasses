@@ -1,3 +1,4 @@
+using Terraria.Chat;
 using Terraria.ModLoader;
 using ExperienceAndClasses.UI;
 using Terraria.UI;
@@ -73,8 +74,8 @@ namespace ExperienceAndClasses
         //active abilities
         public static readonly int NUMBER_OF_ABILITY_SLOTS = 4;
         private static string[] HOTKEY_DEFAULTS = { "Q", "E", "R", "F" };
-        public static ModHotKey[] HOTKEY_ABILITY = new ModHotKey[NUMBER_OF_ABILITY_SLOTS];
-        public static ModHotKey HOTKEY_ALTERNATE_EFFECT;
+        public static ModKeybind[] HOTKEY_ABILITY = new ModKeybind[NUMBER_OF_ABILITY_SLOTS];
+        public static ModKeybind HOTKEY_ALTERNATE_EFFECT;
 
         //exp requirements and cap
         public const int MAX_LEVEL = 3000;
@@ -247,7 +248,7 @@ namespace ExperienceAndClasses
         public override void Unload()
         {
             //remove hotkeys
-            HOTKEY_ABILITY = new ModHotKey[NUMBER_OF_ABILITY_SLOTS];
+            HOTKEY_ABILITY = new ModKeybind[NUMBER_OF_ABILITY_SLOTS];
             HOTKEY_ALTERNATE_EFFECT = null;
         }
 
@@ -337,7 +338,7 @@ namespace ExperienceAndClasses
                     player = Main.player[reader.ReadInt32()];
                     myPlayer = player.GetModPlayer<MyPlayer>(this);
                     myPlayer.experience = reader.ReadDouble();
-                    NetMessage.BroadcastChatMessage(NetworkText.FromLiteral("Experience synced for player #" +player.whoAmI+":"+player.name), ExperienceAndClasses.MESSAGE_COLOUR_YELLOW);
+                    ChatHelper.BroadcastChatMessage(NetworkText.FromLiteral("Experience synced for player #" +player.whoAmI+":"+player.name), ExperienceAndClasses.MESSAGE_COLOUR_YELLOW);
                     Console.WriteLine("Experience synced for player #" + player.whoAmI + ":" + player.name);
 
                     //full sync of exp
@@ -368,7 +369,7 @@ namespace ExperienceAndClasses
                     }
 
                     if ((Main.netMode==2 && worldTrace) || (Main.netMode==1 && traceChar))
-                        NetMessage.BroadcastChatMessage(NetworkText.FromLiteral("TRACE:Recieved ServerForceExperience for player #" + player.whoAmI + ":" + player.name + " = " + newExp), ExperienceAndClasses.MESSAGE_COLOUR_MAGENTA);
+                        ChatHelper.BroadcastChatMessage(NetworkText.FromLiteral("TRACE:Recieved ServerForceExperience for player #" + player.whoAmI + ":" + player.name + " = " + newExp), ExperienceAndClasses.MESSAGE_COLOUR_MAGENTA);
                     break;
 
                 //Player telling the server to adjust experience (e.g., craft token)
@@ -428,7 +429,7 @@ namespace ExperienceAndClasses
                                 myPlayer.auth = false;
                             }
                         }
-                        NetMessage.BroadcastChatMessage(NetworkText.FromLiteral("The expauth code has been changed by " + player.name + ". Authorizations have been reset."), MESSAGE_COLOUR_RED);
+                        ChatHelper.BroadcastChatMessage(NetworkText.FromLiteral("The expauth code has been changed by " + player.name + ". Authorizations have been reset."), MESSAGE_COLOUR_RED);
                     }
                     else if (!worldRequireAuth)
                     {
@@ -731,7 +732,7 @@ namespace ExperienceAndClasses
                     //act
                     if ((Main.netMode==2 && worldTrace) || (Main.netMode==1 && traceChar))
                     {
-                        NetMessage.BroadcastChatMessage(NetworkText.FromLiteral(message), new Color(red, green, blue));
+                        ChatHelper.BroadcastChatMessage(NetworkText.FromLiteral(message), new Color(red, green, blue));
                     }
 
                     if (worldTrace || traceChar) Methods.ChatCommands.Trace("TRACE:Recieved PlayerRequestAnnouncement from player #" + player.whoAmI + ":" + player.name + " = " + message);

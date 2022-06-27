@@ -1214,7 +1214,7 @@ namespace ExperienceAndClasses.Items
                     //buff icon
                     if (myPlayer.timeLastAttack.AddMilliseconds(myPlayer.openerTime_msec).CompareTo(now) <= 0)
                     {
-                        player.AddBuff(mod.BuffType("Buff_OpenerAttack"), 50);
+                        player.AddBuff(mod.Find<ModBuff>("Buff_OpenerAttack").Type, 50);
                     }
                 }
                 bonuses += "\nAssassinate deals " + (floatBonus * 100) + "% damage";
@@ -1251,7 +1251,7 @@ namespace ExperienceAndClasses.Items
                 if (applyEffects)
                 {
                     //apply indicator
-                    if (auraUpdate) AuraEffect(player, true, true, true, false, false, 0, 0, 0, 0, 0, mod.BuffType("Aura_Life"), AURA_UPDATE_BUFF_TICKS);
+                    if (auraUpdate) AuraEffect(player, true, true, true, false, false, 0, 0, 0, 0, 0, mod.Find<ModBuff>("Aura_Life").Type, AURA_UPDATE_BUFF_TICKS);
 
                     //do heal
                     if (TimeReady(player.whoAmI, TIME_IND_AURA_LIFE, periodicPartyHeal_TIME_MSEC, true)) AuraEffect(player, true, true, true, false, false, healAmount, 0.5f);
