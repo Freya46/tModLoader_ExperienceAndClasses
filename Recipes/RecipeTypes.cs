@@ -5,7 +5,9 @@ using Terraria.ModLoader;
 namespace ExperienceAndClasses.Recipes
 {
     /* Recipes that take experience */
-    class ExpRecipe : Recipe
+
+    /**
+     class ExpRecipe : Recipe
     {
         public double experienceNeeded = 0;
 
@@ -14,6 +16,7 @@ namespace ExperienceAndClasses.Recipes
             this.experienceNeeded = experienceNeeded;
         }
 
+        
         public override bool RecipeAvailable()
         {
             if (Main.LocalPlayer.GetModPlayer<MyPlayer>(mod).GetExp() < experienceNeeded)
@@ -21,7 +24,9 @@ namespace ExperienceAndClasses.Recipes
             else
                 return Commons.EnforceDuplicatesInRecipe(this);//base.RecipeAvailable();
         }
+        
 
+        
         public override void OnCraft(Item item)
         {
             if (Helpers.CraftWithExp(mod, experienceNeeded))
@@ -36,11 +41,16 @@ namespace ExperienceAndClasses.Recipes
                 Main.mouseItem.stack--;
             }
         }
+        
     }
+    */
 
     /* Class Token recipe bases (take exp and standard item requirements, remove prefix, announce) */
-    class ClassRecipes : ExpRecipe
+
+    /**
+     class ClassRecipes : ExpRecipe
     {
+        
         public static int[] TIER_LEVEL_REQUIREMENTS = new int[] { 0, 0, 10, 25 };
         public ClassRecipes(Mod mod, int tier) : base(mod, 0)
         {
@@ -58,6 +68,9 @@ namespace ExperienceAndClasses.Recipes
                 AddIngredient(mod.ItemType<Items.Monster_Orb>(), 50);
             }
         }
+        
+
+        
         public override void OnCraft(Item item)
         {
             //get exp prior to crafting
@@ -78,9 +91,12 @@ namespace ExperienceAndClasses.Recipes
                 Methods.PacketSender.ClientTellAnnouncement(mod, Main.LocalPlayer.name + " has completed " + createItem.Name + "!", 255, 255, 0);
             }
         }
+        
     }
+    */
 
     /* Recipes that are available at specified class tiers (token must be equipped, else tier 1) */
+    /**
     class TierRecipe : Recipe
     {
         int tier;
@@ -111,4 +127,5 @@ namespace ExperienceAndClasses.Recipes
             else return false;
         }
     }
+    */
 }

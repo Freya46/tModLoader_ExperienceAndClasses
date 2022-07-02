@@ -32,7 +32,7 @@ namespace ExperienceAndClasses.Buffs
         }
         public override void Update(Player player, ref int buffIndex)
         {
-            if (player.GetModPlayer<MyPlayer>(Mod).openerImmuneEnd.CompareTo(DateTime.Now) <= 0)
+            if (Main.LocalPlayer.GetModPlayer<MyPlayer>().openerImmuneEnd.CompareTo(DateTime.Now) <= 0)
             {
                 //player.DelBuff(mod.BuffType<Buffs.Buff_OpenerPhase>());
             }
@@ -40,7 +40,7 @@ namespace ExperienceAndClasses.Buffs
             {
                 player.immune = true;
                 player.immuneTime = 1;
-                player.AddBuff(Mod.BuffType<Buffs.Buff_OpenerPhase>(), 1);
+                player.AddBuff(ModContent.BuffType<Buffs.Buff_OpenerPhase>(), 1);
             }
 
             base.Update(player, ref buffIndex);

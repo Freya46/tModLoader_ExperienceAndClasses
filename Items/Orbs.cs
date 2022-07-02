@@ -56,18 +56,33 @@ namespace ExperienceAndClasses.Items
                 {
                     if (i>1)
                     {
-                        Commons.QuckRecipe(Mod, new int[,] { { Mod.Find<ModItem>("Experience"+i).Type, 1 } }, this, i);
+                        int expI = Mod.Find<ModItem>("Experience" + i).Type;
+                        Recipe recipe = CreateRecipe()
+                            .AddIngredient(expI);
+                        recipe.Register();
+                        // Commons.QuckRecipe(Mod, new int[,] { { Mod.Find<ModItem>("Experience"+i).Type, 1 } }, this, i);
                     }
                 }
             }
             else
             {
                 //convert up from 1's
-                Commons.QuckRecipe(Mod, new int[,] { {Mod.ItemType<Experience>(), orbValue } }, this, 1);
+                int exp = ModContent.ItemType<Experience>();
+                Recipe recipe = CreateRecipe()
+                    .AddIngredient(exp, orbValue);
+                recipe.Register();
+                // Commons.QuckRecipe(Mod, new int[,] { {Mod.ItemType<Experience>(), orbValue } }, this, 1);
             }
             
             //exp-to-orb conversion
-            Commons.QuckRecipe(Mod, new int[,] { { } }, this, 1, new Recipes.ExpRecipe(Mod, ExperienceAndClasses.EXP_ITEM_VALUE * orbValue), TileID.Campfire);
+            // Commons.QuckRecipe(Mod, new int[,] { { } }, this, 1, new Recipes.ExpRecipe(Mod, ExperienceAndClasses.EXP_ITEM_VALUE * orbValue), TileID.Campfire);
+
+            int exp2 = ModContent.ItemType<Experience>();
+            int amountNeeded = (int)(ExperienceAndClasses.EXP_ITEM_VALUE * orbValue);
+            Recipe recipe2 = CreateRecipe()
+                .AddIngredient(exp2, amountNeeded)
+                .AddTile(TileID.Campfire);
+            recipe2.Register();
         }
         public override bool? UseItem(Player player)/* tModPorter Suggestion: Return null instead of false */
         {
@@ -240,13 +255,32 @@ namespace ExperienceAndClasses.Items
         public override void AddRecipes()
         {
             //convert boss orb to ascension orb
-            Commons.QuckRecipe(Mod, new int[,] { { Mod.Find<ModItem>("Boss_Orb").Type, 1 } }, this, 3);
+            //Commons.QuckRecipe(Mod, new int[,] { { Mod.Find<ModItem>("Boss_Orb").Type, 1 } }, this, 3);
+
+            int bossOrb = Mod.Find<ModItem>("Boss_Orb").Type;
+            int monsterOrb = Mod.Find<ModItem>("Monster_Orb").Type;
+            Recipe recipe1 = CreateRecipe()
+                .AddIngredient(bossOrb);
+            recipe1.ReplaceResult(this, 3);
+            recipe1.Register();
 
             //alt recipe: gold
-            Commons.QuckRecipe(Mod, new int[,] { { ItemID.LifeCrystal, 1 }, { ItemID.ManaCrystal, 1 }, { ItemID.GoldBar, 20 } }, this, 1);
+            //Commons.QuckRecipe(Mod, new int[,] { { ItemID.LifeCrystal, 1 }, { ItemID.ManaCrystal, 1 }, { ItemID.GoldBar, 20 } }, this, 1);
+
+            Recipe recipe2 = CreateRecipe()
+                .AddIngredient(ItemID.LifeCrystal)
+                .AddIngredient(ItemID.ManaCrystal)
+                .AddIngredient(ItemID.GoldBar, 20);
+            recipe2.Register();
 
             //alt recipe: plat
-            Commons.QuckRecipe(Mod, new int[,] { { ItemID.LifeCrystal, 1 }, { ItemID.ManaCrystal, 1 }, { ItemID.PlatinumBar, 20 } }, this, 1);
+           // Commons.QuckRecipe(Mod, new int[,] { { ItemID.LifeCrystal, 1 }, { ItemID.ManaCrystal, 1 }, { ItemID.PlatinumBar, 20 } }, this, 1);
+
+            Recipe recipe3 = CreateRecipe()
+                .AddIngredient(ItemID.LifeCrystal)
+                .AddIngredient(ItemID.ManaCrystal)
+                .AddIngredient(ItemID.PlatinumBar, 20);
+            recipe3.Register();
         }
 
         public override bool? UseItem(Player player)/* tModPorter Suggestion: Return null instead of false */

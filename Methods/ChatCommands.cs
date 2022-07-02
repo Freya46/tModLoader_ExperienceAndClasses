@@ -17,7 +17,7 @@ namespace ExperienceAndClasses.Methods
         public static void CommandSetExp(Mod mod, double exp, string text)
         {
             Player player = Main.LocalPlayer;
-            MyPlayer myPlayer = player.GetModPlayer<MyPlayer>(mod);
+            MyPlayer myPlayer = player.GetModPlayer<MyPlayer>();
             if (Main.netMode == 0)
             {
                 myPlayer.SetExp(exp);
@@ -91,7 +91,7 @@ namespace ExperienceAndClasses.Methods
         public static void CommandToggleCaps(Mod mod, string text)
         {
             Player player = Main.LocalPlayer;
-            MyPlayer myPlayer = player.GetModPlayer<MyPlayer>(mod);
+            MyPlayer myPlayer = player.GetModPlayer<MyPlayer>();
             if (Main.netMode == 0)
             {
                 ExperienceAndClasses.worldIgnoreCaps = !ExperienceAndClasses.worldIgnoreCaps;
@@ -141,7 +141,7 @@ namespace ExperienceAndClasses.Methods
             }
 
             Player player = Main.LocalPlayer;
-            MyPlayer myPlayer = player.GetModPlayer<MyPlayer>(mod);
+            MyPlayer myPlayer = player.GetModPlayer<MyPlayer>();
             if (Main.netMode == 0)
             {
                 int priorLevel = Experience.GetLevel(myPlayer.GetExp());
@@ -182,7 +182,7 @@ namespace ExperienceAndClasses.Methods
             }
 
             Player player = Main.LocalPlayer;
-            MyPlayer myPlayer = player.GetModPlayer<MyPlayer>(mod);
+            MyPlayer myPlayer = player.GetModPlayer<MyPlayer>();
             if (Main.netMode == 0)
             {
                 ExperienceAndClasses.worldClassDamageReduction = damageReductionPercent;
@@ -272,7 +272,7 @@ namespace ExperienceAndClasses.Methods
                 dmgred = "disabled";
             }
 
-            MyPlayer myPlayer = Main.LocalPlayer.GetModPlayer<MyPlayer>(mod);
+            MyPlayer myPlayer = Main.LocalPlayer.GetModPlayer<MyPlayer>();
             if (myPlayer.thresholdCDMsg >= 0f)
             {
                 threshCD = myPlayer.thresholdCDMsg + " seconds";

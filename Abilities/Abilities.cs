@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using Terraria;
+using Terraria.ModLoader;
 
 namespace ExperienceAndClasses.Abilities
 {
@@ -163,7 +164,8 @@ namespace ExperienceAndClasses.Abilities
                 if (!alternate || !ExperienceAndClasses.localMyPlayer.unlocked_abilities_current[(int)alternative]) //main effect (heal)
                 {
                     //visual (dust)
-                    Projectile.NewProjectile(location, new Vector2(0f), ExperienceAndClasses.mod.ProjectileType<DustMakerProj>(), 0, 0, Main.LocalPlayer.whoAmI, (float)DustMakerProj.MODE.HEAL);
+                    int proj1 = ModContent.ProjectileType<DustMakerProj>();
+                    Projectile.NewProjectile(null, location, new Vector2(0f), proj1, 0, 0, Main.LocalPlayer.whoAmI, (float)DustMakerProj.MODE.HEAL);
 
                     //update upgrades
                     upgrade_smite = ExperienceAndClasses.localMyPlayer.unlocked_abilities_current[(int)ID.Cleric_Upgrade_Heal_Smite];
@@ -196,7 +198,8 @@ namespace ExperienceAndClasses.Abilities
                 }
                 else //alternative effect (barrier)
                 {
-                    Projectile.NewProjectile(location, new Vector2(0f), ExperienceAndClasses.mod.ProjectileType<AbilityProj.Cleric_Barrier>(), (int)(value_damage * Cleric_Alternate_Heal_Barrier.damage_multiplier), Cleric_Alternate_Heal_Barrier.knockback, Main.LocalPlayer.whoAmI);
+                    int proj2 = ModContent.ProjectileType<AbilityProj.Cleric_Barrier>();
+                    Projectile.NewProjectile(null, location, new Vector2(0f), proj2, (int)(value_damage * Cleric_Alternate_Heal_Barrier.damage_multiplier), Cleric_Alternate_Heal_Barrier.knockback, Main.LocalPlayer.whoAmI);
                 }
 
                 return RETURN.SUCCESS;
@@ -344,7 +347,8 @@ namespace ExperienceAndClasses.Abilities
                             {
                                 value = 9999;
                                 ExperienceAndClasses.localMyPlayer.EndStatus((int)ExperienceAndClasses.STATUSES.Renew);
-                                Projectile.NewProjectile(Main.player[index].Center, new Vector2(0f), ExperienceAndClasses.mod.ProjectileType<DustMakerProj>(), 0, 0, Main.LocalPlayer.whoAmI, (float)DustMakerProj.MODE.HEAL_RENEW);
+                                int proj1 = ModContent.ProjectileType<DustMakerProj>();
+                                Projectile.NewProjectile(null, Main.player[index].Center, new Vector2(0f), proj1, 0, 0, Main.LocalPlayer.whoAmI, (float)DustMakerProj.MODE.HEAL_RENEW);
                                 healed_something = 2;
                             }
                         }
@@ -353,9 +357,10 @@ namespace ExperienceAndClasses.Abilities
 
                 //round down to int (implicit)
                 int value_final = (int)value;
-                
+
                 //create projecile to handle (easy way to sync for multiplayer)
-                Projectile.NewProjectile(Main.LocalPlayer.Center, new Vector2(0f), ExperienceAndClasses.mod.ProjectileType<AbilityProj.Misc_HealHurt>(), value_final, KNOCKBACK, Main.LocalPlayer.whoAmI, player_val, index);
+                int proj = ModContent.ProjectileType<AbilityProj.Misc_HealHurt>();
+                Projectile.NewProjectile(null, Main.LocalPlayer.Center, new Vector2(0f), proj, value_final, KNOCKBACK, Main.LocalPlayer.whoAmI, player_val, index);
             }
 
             public override double GetCooldownSecs(byte level = 1)
@@ -422,7 +427,8 @@ namespace ExperienceAndClasses.Abilities
                 }
 
                 //create
-                Projectile.NewProjectile(Main.LocalPlayer.Center, new Vector2(0f), ExperienceAndClasses.mod.ProjectileType<AbilityProj.Cleric_Sanctuary>(), 0, 0, Main.LocalPlayer.whoAmI, sanc_index);
+                int proj = ModContent.ProjectileType<AbilityProj.Cleric_Sanctuary>();
+                Projectile.NewProjectile(null, Main.LocalPlayer.Center, new Vector2(0f), proj, 0, 0,sanc_index);
 
                 //success
                 return RETURN.SUCCESS;
@@ -459,30 +465,34 @@ namespace ExperienceAndClasses.Abilities
                     if (t.Item1)
                     {
                         //player
-                        myPlayer = Main.player[t.Item2].GetModPlayer<MyPlayer>(ExperienceAndClasses.mod);
+                        myPlayer = Main.player[t.Item2].GetModPlayer<MyPlayer>();
                         if (DateTime.Now.Subtract(myPlayer.time_last_hit_taken).TotalSeconds >= REQ_TIME_NO_HIT_TAKEN)
                         {
                             //heal
                             if (DateTime.Now.Subtract(myPlayer.time_last_sanc_effect).TotalSeconds >= PULSE_SECONDS)
                             {
-                                Projectile.NewProjectile(projectile.Center, new Vector2(0f), ExperienceAndClasses.mod.ProjectileType<AbilityProj.Misc_HealHurt>(), heal, 0, Main.LocalPlayer.whoAmI, 2, t.Item2);
+                                int proj = ModContent.ProjectileType<AbilityProj.Misc_HealHurt>();
+                                Projectile.NewProjectile(null, projectile.Center, new Vector2(0f), proj, heal, 0, Main.LocalPlayer.whoAmI, 2, t.Item2);
                             }
 
                             //buff
                             if (ExperienceAndClasses.localMyPlayer.unlocked_abilities_current[(int)ID.Cleric_Upgrade_Sanctuary_HolyLight])
                             {
-                                Projectile.NewProjectile(myPlayer.Player.Center, new Vector2(0f), ExperienceAndClasses.mod.ProjectileType<AbilityProj.Misc_PlayerStatus>(), myPlayer.Player.whoAmI, 0, Main.LocalPlayer.whoAmI, (float)ExperienceAndClasses.STATUSES.HolyLight, BUFF_DURATION_SECONDS);
+                                int proj2 = ModContent.ProjectileType<AbilityProj.Misc_PlayerStatus>();
+                                Projectile.NewProjectile(null, myPlayer.Player.Center, new Vector2(0f), proj2, myPlayer.Player.whoAmI, 0, Main.LocalPlayer.whoAmI, (float)ExperienceAndClasses.STATUSES.HolyLight, BUFF_DURATION_SECONDS);
                             }
                             if (ExperienceAndClasses.localMyPlayer.unlocked_abilities_current[(int)ID.Cleric_Upgrade_Sanctuary_Blessing])
                             {
-                                Projectile.NewProjectile(myPlayer.Player.Center, new Vector2(0f), ExperienceAndClasses.mod.ProjectileType<AbilityProj.Misc_PlayerStatus>(), myPlayer.Player.whoAmI, heal, Main.LocalPlayer.whoAmI, (float)ExperienceAndClasses.STATUSES.Blessing, BUFF_DURATION_SECONDS);
+                                int proj3 = ModContent.ProjectileType<AbilityProj.Misc_PlayerStatus>();
+                                Projectile.NewProjectile(null, myPlayer.Player.Center, new Vector2(0f), proj3, myPlayer.Player.whoAmI, heal, Main.LocalPlayer.whoAmI, (float)ExperienceAndClasses.STATUSES.Blessing, BUFF_DURATION_SECONDS);
                             }
                         }
                     }
                     else 
                     {
                         //npc
-                        Projectile.NewProjectile(projectile.Center, new Vector2(0f), ExperienceAndClasses.mod.ProjectileType<AbilityProj.Misc_HealHurt>(), heal, 0, Main.LocalPlayer.whoAmI, 0, t.Item2);
+                        int proj4 = ModContent.ProjectileType<AbilityProj.Misc_HealHurt>();
+                        Projectile.NewProjectile(null, projectile.Center, new Vector2(0f), proj4, heal, 0, Main.LocalPlayer.whoAmI, 0, t.Item2);
                     }
                 }
             }
@@ -496,7 +506,7 @@ namespace ExperienceAndClasses.Abilities
                 {
                     if (Main.player[player].active)
                     {
-                        myPlayer = Main.player[player].GetModPlayer<MyPlayer>(ExperienceAndClasses.mod);
+                        myPlayer = Main.player[player].GetModPlayer<MyPlayer>();
                         for (int sanc = 0; sanc <= 1; sanc++)
                         {
                             if ((myPlayer.sanctuaries[sanc] != null) && myPlayer.sanctuaries[sanc].active)
@@ -594,7 +604,8 @@ namespace ExperienceAndClasses.Abilities
                 }
 
                 //visual (dust)
-                Projectile.NewProjectile(location, new Vector2(0f), ExperienceAndClasses.mod.ProjectileType<DustMakerProj>(), 0, 0, Main.LocalPlayer.whoAmI, (float)DustMakerProj.MODE.DIVINE_INTERVENTION, range);
+                int proj = ModContent.ProjectileType<DustMakerProj>();
+                Projectile.NewProjectile(null, location, new Vector2(0f), proj, 0, 0, Main.LocalPlayer.whoAmI, (float)DustMakerProj.MODE.DIVINE_INTERVENTION, range);
 
                 //look for players/npcs
                 Tuple<List<Tuple<bool, int, bool>>, int, int, bool, bool> target_info = FindTargets(ExperienceAndClasses.localMyPlayer.Player, location, range, true, true, false, true, false);
@@ -606,7 +617,7 @@ namespace ExperienceAndClasses.Abilities
                     if (!Main.player[t.Item2].dead)
                     {
                         //adjust duration
-                        myPlayer = Main.player[t.Item2].GetModPlayer<MyPlayer>(ExperienceAndClasses.mod);
+                        myPlayer = Main.player[t.Item2].GetModPlayer<MyPlayer>();
                         duration_use = duration;
                         if (ExperienceAndClasses.localMyPlayer.HasImmunityItem() || myPlayer.HasImmunityItem())
                         {
@@ -614,7 +625,8 @@ namespace ExperienceAndClasses.Abilities
                         }
 
                         //apply
-                        Projectile.NewProjectile(location, new Vector2(0f), ExperienceAndClasses.mod.ProjectileType<AbilityProj.Misc_PlayerStatus>(), t.Item2, 0, Main.LocalPlayer.whoAmI, (float)ExperienceAndClasses.STATUSES.DivineIntervention, duration_use);
+                        int proj2 = ModContent.ProjectileType<AbilityProj.Misc_PlayerStatus>();
+                        Projectile.NewProjectile(null,location, new Vector2(0f), proj2, t.Item2, 0, Main.LocalPlayer.whoAmI, (float)ExperienceAndClasses.STATUSES.DivineIntervention, duration_use);
                     }
                 }
 
@@ -687,12 +699,14 @@ namespace ExperienceAndClasses.Abilities
                 if (alternate && ExperienceAndClasses.localMyPlayer.unlocked_abilities_current[(int)alternative])
                 {
                     //renew
-                    Projectile.NewProjectile(Main.LocalPlayer.Center, new Vector2(0f), ExperienceAndClasses.mod.ProjectileType<AbilityProj.Misc_PlayerStatus>(), Main.LocalPlayer.whoAmI, 0, Main.LocalPlayer.whoAmI, (float)ExperienceAndClasses.STATUSES.Renew, DURATION_SECONDS);
+                    int proj1 = ModContent.ProjectileType<AbilityProj.Misc_PlayerStatus>();
+                    Projectile.NewProjectile(null, Main.LocalPlayer.Center, new Vector2(0f), proj1, Main.LocalPlayer.whoAmI, 0, Main.LocalPlayer.whoAmI, (float)ExperienceAndClasses.STATUSES.Renew, DURATION_SECONDS);
                 }
                 else
                 {
                     //paragon
-                    Projectile.NewProjectile(Main.LocalPlayer.Center, new Vector2(0f), ExperienceAndClasses.mod.ProjectileType<AbilityProj.Misc_PlayerStatus>(), Main.LocalPlayer.whoAmI, HEAL_COOLDOWN_AND_COST_MULTIPLIER, Main.LocalPlayer.whoAmI, (float)ExperienceAndClasses.STATUSES.Paragon, DURATION_SECONDS);
+                    int proj2 = ModContent.ProjectileType<AbilityProj.Misc_PlayerStatus>();
+                    Projectile.NewProjectile(null, Main.LocalPlayer.Center, new Vector2(0f), proj2, Main.LocalPlayer.whoAmI, HEAL_COOLDOWN_AND_COST_MULTIPLIER, Main.LocalPlayer.whoAmI, (float)ExperienceAndClasses.STATUSES.Paragon, DURATION_SECONDS);
                 }
                 //refresh heal's cooldown
                 AbilityLookup[(int)ID.Cleric_Active_Heal].RefreshCooldown();
@@ -899,7 +913,8 @@ namespace ExperienceAndClasses.Abilities
             protected void CastDust()
             {
                 //create dust from projectile for easy multiplayer sync
-                Projectile.NewProjectile(Main.LocalPlayer.position.X, Main.LocalPlayer.position.Y, 0, 0, ExperienceAndClasses.mod.ProjectileType<DustMakerProj>(), 0, 0, Main.LocalPlayer.whoAmI, (float)DustMakerProj.MODE.ABILITY_CAST, (float)class_type);
+
+                // Projectile.NewProjectile(Main.LocalPlayer.position.X, Main.LocalPlayer.position.Y, 0, 0, ExperienceAndClasses.mod.ProjectileType<DustMakerProj>(), 0, 0, Main.LocalPlayer.whoAmI, (float)DustMakerProj.MODE.ABILITY_CAST, (float)class_type);
             }
 
             public virtual string CooldownUI(byte level, out float percent)

@@ -30,16 +30,14 @@ namespace ExperienceAndClasses
 
         public override void SaveWorldData(TagCompound tag)/* tModPorter Suggestion: Edit tag parameter instead of returning new TagCompound */
         {
-            return new TagCompound {
-                {"AUTH_CODE", ExperienceAndClasses.worldAuthCode},
-                {"require_auth", ExperienceAndClasses.worldRequireAuth},
-                {"global_exp_modifier", ExperienceAndClasses.worldExpModifier},
-                {"global_ignore_caps", ExperienceAndClasses.worldIgnoreCaps},
-                {"global_damage_reduction", ExperienceAndClasses.worldClassDamageReduction},
-                {"global_level_cap", ExperienceAndClasses.worldLevelCap},
-                {"global_death_penalty", ExperienceAndClasses.worldDeathPenalty},
-                {"traceMap", ExperienceAndClasses.worldTrace},
-            };
+            tag.Set("AUTH_CODE", ExperienceAndClasses.worldAuthCode);
+            tag.Set("require_auth", ExperienceAndClasses.worldRequireAuth);
+            tag.Set("global_exp_modifier", ExperienceAndClasses.worldExpModifier);
+            tag.Set("global_ignore_caps", ExperienceAndClasses.worldIgnoreCaps);
+            tag.Set("global_damage_reduction", ExperienceAndClasses.worldClassDamageReduction);
+            tag.Set("global_level_cap", ExperienceAndClasses.worldLevelCap);
+            tag.Set("global_death_penalty", ExperienceAndClasses.worldDeathPenalty);
+            tag.Set("traceMap", ExperienceAndClasses.worldTrace);
         }
 
         public override void LoadWorldData(TagCompound tag)
@@ -107,7 +105,7 @@ namespace ExperienceAndClasses
             {
                 if (Main.player[i].active)
                 {
-                    myPlayer = Main.player[i].GetModPlayer<MyPlayer>(Mod);
+                    myPlayer = Main.player[i].GetModPlayer<MyPlayer>();
                     if (myPlayer.GetExp() == -1)// && target_time.CompareTo(time_last_player_request[i])>0)
                     {
                         //Server's request to new player (includes map settings)

@@ -16,6 +16,8 @@ public static class Commons
     /// <param name="result"></param>
     /// <param name="numResult"></param>
     /// <param name="where"></param>
+    
+    /**
     public static void QuckRecipe(Mod mod, int[,] ingredients, ModItem result, int numResult = 1, Recipe buildOn = null, ushort where = TileID.WorkBenches)
     {
         //recipe
@@ -36,11 +38,12 @@ public static class Commons
         }
 
         //result
-        recipe.SetResult(result, numResult);/* tModPorter Pass result to CreateRecipe. */
+        recipe.SetResult(result, numResult);tModPorter Pass result to CreateRecipe. 
 
         //complete
         recipe.Register();
     }
+    */
 
     /// <summary>
     /// Combines duplicate items and checks if the player has enough. Workaround for duplicate item recipe bug.
@@ -52,21 +55,23 @@ public static class Commons
     {
         List<int> types = new List<int>();
         List<int> stacks = new List<int>();
-        Item[] ingedients = recipe.requiredItem;
+        List<Item> ingredients = recipe.requiredItem;
         int ind;
-        for (int i = 0; i < ingedients.Length; i++)
+
+        ingredients.ForEach((ingredient) =>
         {
-            ind = types.IndexOf(ingedients[i].type);
+            ind = types.IndexOf(ingredient.type);
             if (ind >= 0)
             {
-                stacks[ind] += ingedients[i].stack;
+                stacks[ind] += ingredient.stack;
             }
             else
             {
-                types.Add(ingedients[i].type);
-                stacks.Add(ingedients[i].stack);
+                types.Add(ingredient.type);
+                stacks.Add(ingredient.stack);
             }
-        }
+        });
+
         int count;
         for (int i = 0; i < types.Count; i++)
         {

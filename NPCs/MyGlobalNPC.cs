@@ -4,6 +4,9 @@ using System.Collections;
 using Terraria;
 using Terraria.Localization;
 using Terraria.ModLoader;
+using Terraria.UI;
+using Terraria.UI.Chat;
+using Terraria.Net;
 
 namespace ExperienceAndClasses.NPCs
 {
@@ -131,7 +134,7 @@ namespace ExperienceAndClasses.NPCs
                         player = Main.player[playerIndex];
                         if (!player.active) continue;
                     }
-                    myPlayer = player.GetModPlayer<MyPlayer>(Mod);
+                    myPlayer = player.GetModPlayer<MyPlayer>();
 
                     //only reward if not afk
                     if (!myPlayer.afk)
@@ -232,8 +235,8 @@ namespace ExperienceAndClasses.NPCs
                     {
                         if (Main.player[playerIndex].active)
                         {
-                            if (droppedBossOrb && interactionsBossOrb[playerIndex]) NetMessage.SendChatMessageToClient(textBoss, ExperienceAndClasses.MESSAGE_COLOUR_BOSS_ORB, playerIndex);
-                            if (droppedMonsterOrb && interactionsMonsterOrb[playerIndex]) NetMessage.SendChatMessageToClient(textMonster, ExperienceAndClasses.MESSAGE_COLOUR_ASCENSION_ORB, playerIndex);
+                            // TODO FIXME if (droppedBossOrb && interactionsBossOrb[playerIndex]) NetMessage.SendChatMessageToClient(textBoss, ExperienceAndClasses.MESSAGE_COLOUR_BOSS_ORB, playerIndex);
+                            // TODO FIXME if (droppedMonsterOrb && interactionsMonsterOrb[playerIndex]) NetMessage.SendChatMessageToClient(textMonster, ExperienceAndClasses.MESSAGE_COLOUR_ASCENSION_ORB, playerIndex);
                         }
                     }
                 }

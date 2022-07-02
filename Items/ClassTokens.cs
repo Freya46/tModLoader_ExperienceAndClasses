@@ -5,162 +5,221 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using System.Collections.Generic;
 using ExperienceAndClasses.Abilities;
+using Terraria.Localization;
+
 
 namespace ExperienceAndClasses.Items
 {
     /* Template & Novice */
     //note that abstract ModItem cause issues
-    public class ClassToken_Novice : ModItem
-    {
-        public static readonly string[] TIER_NAMES = new string[] { "?", "I", "II", "III" };
-        public string name = "Novice";
-        public int tier = 1;
-        public string desc = "Starter class." +
-                         "\n\nClass advancement is available at level " + Recipes.ClassRecipes.TIER_LEVEL_REQUIREMENTS[1 + 1] + ".";
+    //public class ClassToken_Novice : ModItem
+    //{
+    //    public static readonly string[] TIER_NAMES = new string[] { "?", "I", "II", "III" };
+    //    public string name = "Novice";
+    //    public int tier = 1;
+    //    public string desc = "Starter class." +
+    //                     "\n\nClass advancement is available at level " + Recipes.Helpers.TIER_LEVEL_REQUIREMENTS[1 + 1] + ".";
 
-        public List<Tuple<AbilityMain.ID, byte>> abilities = new List<Tuple<AbilityMain.ID, byte>>();
+    //    public List<Tuple<AbilityMain.ID, byte>> abilities = new List<Tuple<AbilityMain.ID, byte>>();
 
-        public override void ModifyTooltips(List<TooltipLine> tooltips)
-        {
-            MyPlayer myLocalPlayer = Main.LocalPlayer.GetModPlayer<MyPlayer>(Mod);
+    //    public override void ModifyTooltips(List<TooltipLine> tooltips)
+    //    {
+    //        MyPlayer myLocalPlayer = Main.LocalPlayer.GetModPlayer<MyPlayer>();
 
-            bool isEquipped = false;
-            foreach (var i in myLocalPlayer.classTokensEquipped)
-            {
-                if (i.Item2.Equals(name)) isEquipped = true;
-            }
-            string desc2 = Helpers.ClassTokenEffects(Mod, Main.LocalPlayer, this, name, false, myLocalPlayer, isEquipped);
+    //        bool isEquipped = false;
+    //        foreach (var i in myLocalPlayer.classTokensEquipped)
+    //        {
+    //            if (i.Item2.Equals(name)) isEquipped = true;
+    //        }
+    //        string desc2 = Helpers.ClassTokenEffects(Mod, Main.LocalPlayer, this, name, false, myLocalPlayer, isEquipped);
 
-            if (desc2.Length > 0)
-            {
-                TooltipLine line = new TooltipLine(Mod, "desc2", desc2);
-                line.OverrideColor = Color.LimeGreen;
-                tooltips.Add(line);
-            }
-        }
+    //        if (desc2.Length > 0)
+    //        {
+    //            TooltipLine line = new TooltipLine(Mod, "desc2", desc2);
+    //            line.OverrideColor = Color.LimeGreen;
+    //            tooltips.Add(line);
+    //        }
+    //    }
 
-        public override void UpdateInventory(Player player)
-        {
-            //update description in inventory (remove current bonuses)
-            if (Main.LocalPlayer.Equals(player)) Item.RebuildTooltip();
-            base.UpdateInventory(player);
-        }
+    //    public override void UpdateInventory(Player player)
+    //    {
+    //        //update description in inventory (remove current bonuses)
+    //        if (Main.LocalPlayer.Equals(player)) Item.RebuildTooltip();
+    //        base.UpdateInventory(player);
+    //    }
 
-        public override void SetStaticDefaults()
-        {
-            //tier string
-            string tierString = "?";
-            if (tier > 0 && tier < TIER_NAMES.Length) tierString = TIER_NAMES[tier];
+    //    public override void SetStaticDefaults()
+    //    {
+    //        //tier string
+    //        string tierString = "?";
+    //        if (tier > 0 && tier < TIER_NAMES.Length) tierString = TIER_NAMES[tier];
 
-            //basic properties
-            //item.name = "Class Token: " + name + " (Tier " + tierString + ")";
-            DisplayName.SetDefault("Class Token: " + name + " (Tier " + tierString + ")");
+    //        //basic properties
+    //        //item.name = "Class Token: " + name + " (Tier " + tierString + ")";
+    //        DisplayName.SetDefault("Class Token: " + name + " (Tier " + tierString + ")");
 
-            //add class description
-            //item.toolTip = desc;
-            Tooltip.SetDefault(desc);
-        }
+    //        //add class description
+    //        //item.toolTip = desc;
+    //        Tooltip.SetDefault(desc);
+    //    }
 
-        public override void SetDefaults()
-        {
-            Item.width = 36;
-            Item.height = 36;
-            Item.value = 0;
-            Item.rare = 10;
-            Item.accessory = true;
+    //    public override void SetDefaults()
+    //    {
+    //        Item.width = 36;
+    //        Item.height = 36;
+    //        Item.value = 0;
+    //        Item.rare = 10;
+    //        Item.accessory = true;
 
-            //add class bonuses description
-            Helpers.ClassTokenEffects(Mod, Main.LocalPlayer, this, name, false, new MyPlayer());
-        }
+    //        //add class bonuses description
+    //        Helpers.ClassTokenEffects(Mod, Main.LocalPlayer, this, name, false, new MyPlayer());
+    //    }
 
-        public override void AddRecipes()
-        {
-            if (tier==1) Commons.QuckRecipe(Mod, new int[,] { }, this, 1, new Recipes.ClassRecipes(Mod, tier));
-        }
+    //    public override void AddRecipes()
+    //    {
+    //        if (tier == 1) {
+    //            Recipe recipe = CreateRecipe();
+    //            recipe.Register();
+    //        };
+    //    }
 
-        public override void UpdateAccessory(Player player, bool hideVisual)
-        {
-            MyPlayer myPlayer = player.GetModPlayer<MyPlayer>(Mod);
+    //    public override void UpdateAccessory(Player player, bool hideVisual)
+    //    {
+    //        MyPlayer myPlayer = player.GetModPlayer<MyPlayer>();
 
-            myPlayer.classTokensEquipped.Add(new Tuple<ModItem, string>(this, name));
+    //        myPlayer.classTokensEquipped.Add(new Tuple<ModItem, string>(this, name));
 
-            //track (own) player's current abilities
-            if (player.whoAmI == Main.LocalPlayer.whoAmI)
-            {
-                int level = myPlayer.GetLevel();
-                foreach (Tuple<AbilityMain.ID, byte> ability in abilities)
-                {
-                    if (level >= ability.Item2)
-                    {
-                        myPlayer.unlocked_abilities_next[(int)ability.Item1] = true;
-                    }
-                }
-            }
-        }
-    }
+    //        //track (own) player's current abilities
+    //        if (player.whoAmI == Main.LocalPlayer.whoAmI)
+    //        {
+    //            int level = myPlayer.GetLevel();
+    //            foreach (Tuple<AbilityMain.ID, byte> ability in abilities)
+    //            {
+    //                if (level >= ability.Item2)
+    //                {
+    //                    myPlayer.unlocked_abilities_next[(int)ability.Item1] = true;
+    //                }
+    //            }
+    //        }
+    //    }
+    //}
 
     /* Squire */
-    public class ClassToken_Squire : ClassToken_Novice
-    {
-        public ClassToken_Squire()
-        {
-            name = "Squire";
-            tier = 2;
-            desc = "Basic melee damage and life class."+
-                       "\n\nClass advancement is available at level " + Recipes.ClassRecipes.TIER_LEVEL_REQUIREMENTS[tier+1] + ".";
-        }
-        public override void AddRecipes()
-        {
-            Recipe recipe = new Recipes.ClassRecipes(Mod, tier);
-            recipe.AddRecipeGroup("IronBar", 10);
-            Commons.QuckRecipe(Mod, new int[,] { { Mod.Find<ModItem>("ClassToken_Novice").Type, 1 } }, this, 1, recipe);
-        }
-    }
+    //public class ClassToken_Squire : ClassToken_Novice
+    //{
+    //    public ClassToken_Squire()
+    //    {
+    //        name = "Squire";
+    //        tier = 2;
+    //        desc = "Basic melee damage and life class."+
+    //                   "\n\nClass advancement is available at level " + Recipes.Helpers.TIER_LEVEL_REQUIREMENTS[tier+1] + ".";
+    //    }
+    //    public override void AddRecipes()
+    //    {
+    //        Recipe recipe = CreateRecipe()
+    //        .AddIngredient(ItemID.IronBar, 10)
+    //        .AddIngredient(Mod.Find<ModItem>("ClassToken_Novice"))
+    //        .AddCondition(NetworkText.FromLiteral("TestCondition"), recipe =>
+    //         {
+    //             return Recipes.Helpers.isTokenCraftable(tier);
+    //         })
+    //        .AddOnCraftCallback(delegate (Recipe recipe, Item item)
+    //        {
+    //            Recipes.Helpers.onCraft(Mod, tier, recipe, item);
+    //        });
+    //    }
+    //}
 
     /* Squire - Tank */
-    public class ClassToken_Tank : ClassToken_Novice
-    {
-        public ClassToken_Tank()
-        {
-            name = "Tank";
-            tier = 3;
-            desc = "Tank class."+
-                       "\n\nHas the highest life, defense, and aggro. Occasionally recovers"+
-                       "\na percentage of maximum life.";
-        }
-        public override void AddRecipes()
-        {
-            Commons.QuckRecipe(Mod, new int[,] { { Mod.Find<ModItem>("ClassToken_Squire").Type, 1 }, { ItemID.StoneBlock, 999 } }, this, 1, new Recipes.ClassRecipes(Mod, tier));
-            Commons.QuckRecipe(Mod, new int[,] { { Mod.Find<ModItem>("ClassToken_Hybrid").Type, 1 }, { ItemID.StoneBlock, 999 } }, this, 1, new Recipes.ClassRecipes(Mod, tier));
-        }
-    }
+    //public class ClassToken_Tank : ClassToken_Novice
+    //{
+    //    public ClassToken_Tank()
+    //    {
+    //        name = "Tank";
+    //        tier = 3;
+    //        desc = "Tank class."+
+    //                   "\n\nHas the highest life, defense, and aggro. Occasionally recovers"+
+    //                   "\na percentage of maximum life.";
+    //    }
+    //    public override void AddRecipes()
+    //    {
+    //        Recipe recipe1 = CreateRecipe()
+    //        .AddIngredient(Mod.Find<ModItem>("Boss_Orb"), 5)
+    //        .AddIngredient(Mod.Find<ModItem>("Monster_Orb"), 50)
+    //        .AddIngredient(Mod.Find<ModItem>("ClassToken_Squire"))
+    //        .AddCondition(NetworkText.FromLiteral("Experience"), recipe =>
+    //        {
+    //            return Recipes.Helpers.isTokenCraftable(tier);
+    //        })
+    //        .AddOnCraftCallback(delegate (Recipe recipe, Item item)
+    //        {
+    //            Recipes.Helpers.onCraft(Mod, tier, recipe, item);
+    //        });
+    //        recipe1.Register();
+
+
+    //        Recipe recipe2 = CreateRecipe()
+    //        .AddIngredient(Mod.Find<ModItem>("Boss_Orb"), 5)
+    //        .AddIngredient(Mod.Find<ModItem>("Monster_Orb"), 50)
+    //        .AddIngredient(Mod.Find<ModItem>("ClassToken_Hybrid"))
+    //        .AddCondition(NetworkText.FromLiteral("TestCondition"), recipe =>
+    //        {
+    //            return Recipes.Helpers.isTokenCraftable(tier);
+    //        })
+    //        .AddOnCraftCallback(delegate (Recipe recipe, Item item)
+    //        {
+    //            Recipes.Helpers.onCraft(Mod, tier, recipe, item);
+    //        });
+    //        recipe2.Register();
+    //    }
+    //}
 
     /* Squire - Warrior */
-    public class ClassToken_Warrior : ClassToken_Novice
-    {
-        public ClassToken_Warrior()
-        {
-            name = "Warrior";
-            tier = 3;
-            desc = "Melee damage and life class."+
-                       "\n\nHas the highest melee damage, and the second highest melee speed"+
-                         "\nand life.";
-        }
-        public override void AddRecipes()
-        {
-            Recipe recipe;
+    //public class ClassToken_Warrior : ClassToken_Novice
+    //{
+    //    public ClassToken_Warrior()
+    //    {
+    //        name = "Warrior";
+    //        tier = 3;
+    //        desc = "Melee damage and life class."+
+    //                   "\n\nHas the highest melee damage, and the second highest melee speed"+
+    //                     "\nand life.";
+    //    }
+    //    public override void AddRecipes()
+    //    {
+    //        Recipe recipe1 = CreateRecipe()
+    //        .AddIngredient(Mod.Find<ModItem>("Boss_Orb"), 5)
+    //        .AddIngredient(Mod.Find<ModItem>("Monster_Orb"), 50)
+    //        .AddIngredient(Mod.Find<ModItem>("ClassToken_Squire"))
+    //        .AddCondition(NetworkText.FromLiteral("TestCondition"), recipe =>
+    //        {
+    //            return Recipes.Helpers.isTokenCraftable(tier);
+    //        })
+    //        .AddOnCraftCallback(delegate (Recipe recipe, Item item)
+    //        {
+    //            Recipes.Helpers.onCraft(Mod, tier, recipe, item);
+    //        });
+    //        recipe1.Register();
 
-            recipe = new Recipes.ClassRecipes(Mod, tier);
-            recipe.AddRecipeGroup("IronBar", 100);
-            Commons.QuckRecipe(Mod, new int[,] { { Mod.Find<ModItem>("ClassToken_Squire").Type, 1 } }, this, 1, recipe);
 
-            recipe = new Recipes.ClassRecipes(Mod, tier);
-            recipe.AddRecipeGroup("IronBar", 100);
-            Commons.QuckRecipe(Mod, new int[,] { { Mod.Find<ModItem>("ClassToken_Hybrid").Type, 1 } }, this, 1, recipe);
-        }
-    }
+    //        Recipe recipe2 = CreateRecipe()
+    //        .AddIngredient(Mod.Find<ModItem>("Boss_Orb"), 5)
+    //        .AddIngredient(Mod.Find<ModItem>("Monster_Orb"), 50)
+    //        .AddIngredient(Mod.Find<ModItem>("ClassToken_Hybrid"))
+    //        .AddCondition(NetworkText.FromLiteral("TestCondition"), recipe =>
+    //        {
+    //            return Recipes.Helpers.isTokenCraftable(tier);
+    //        })
+    //        .AddOnCraftCallback(delegate (Recipe recipe, Item item)
+    //        {
+    //            Recipes.Helpers.onCraft(Mod, tier, recipe, item);
+    //        });
+    //        recipe2.Register();
+    //    }
+    //}
 
-    /* Squire - Berserker */
+    /**
+    // Squire - Berserker 
     public class ClassToken_Berserker : ClassToken_Novice
     {
         public ClassToken_Berserker()
@@ -185,7 +244,7 @@ namespace ExperienceAndClasses.Items
         }
     }
 
-    /* Hunter */
+    // Hunter 
     public class ClassToken_Hunter : ClassToken_Novice
     {
         public ClassToken_Hunter()
@@ -203,7 +262,7 @@ namespace ExperienceAndClasses.Items
         }
     }
 
-    /* Hunter - Archer */
+    // Hunter - Archer
     public class ClassToken_Archer : ClassToken_Novice
     {
         public ClassToken_Archer()
@@ -228,7 +287,7 @@ namespace ExperienceAndClasses.Items
         }
     }
 
-    /* Hunter - Ranger */
+    // Hunter - Ranger
     public class ClassToken_Ranger : ClassToken_Novice
     {
         public ClassToken_Ranger()
@@ -256,7 +315,7 @@ namespace ExperienceAndClasses.Items
         }
     }
 
-    /* Hunter - Gunner */
+    // Hunter - Gunner
     public class ClassToken_Gunner : ClassToken_Novice
     {
         public ClassToken_Gunner()
@@ -281,7 +340,7 @@ namespace ExperienceAndClasses.Items
         }
     }
 
-    /* Mage */
+    // Mage 
     public class ClassToken_Mage : ClassToken_Novice
     {
         public ClassToken_Mage()
@@ -297,7 +356,7 @@ namespace ExperienceAndClasses.Items
         }
     }
 
-    /* Mage - Mystic */
+    // Mage - Mystic 
     public class ClassToken_Mystic : ClassToken_Novice
     {
         public ClassToken_Mystic()
@@ -316,7 +375,7 @@ namespace ExperienceAndClasses.Items
         }
     }
 
-    /* Mage - Sage */
+    // Mage - Sage
     public class ClassToken_Sage : ClassToken_Novice
     {
         public ClassToken_Sage()
@@ -339,7 +398,7 @@ namespace ExperienceAndClasses.Items
         }
     }
 
-    /* Summoner */
+    // Summoner
     public class ClassToken_Summoner : ClassToken_Novice
     {
         public ClassToken_Summoner()
@@ -355,7 +414,7 @@ namespace ExperienceAndClasses.Items
         }
     }
 
-    /* Summoner - SoulBinder */
+    // Summoner - SoulBinder
     public class ClassToken_SoulBinder : ClassToken_Novice
     {
         public ClassToken_SoulBinder()
@@ -373,7 +432,7 @@ namespace ExperienceAndClasses.Items
         }
     }
 
-    /* Summoner - MinionMaster */
+    // Summoner - MinionMaster
     public class ClassToken_MinionMaster : ClassToken_Novice
     {
         public ClassToken_MinionMaster()
@@ -397,7 +456,7 @@ namespace ExperienceAndClasses.Items
         }
     }
 
-    /* Rogue */
+    // Rogue
     public class ClassToken_Rogue : ClassToken_Novice
     {
         public ClassToken_Rogue()
@@ -413,7 +472,7 @@ namespace ExperienceAndClasses.Items
         }
     }
 
-    /* Rogue - Assassin */
+    // Rogue - Assassin
     public class ClassToken_Assassin : ClassToken_Novice
     {
         public ClassToken_Assassin()
@@ -437,7 +496,7 @@ namespace ExperienceAndClasses.Items
         }
     }
 
-    /* Rogue - Ninja */
+    // Rogue - Ninja
     public class ClassToken_Ninja : ClassToken_Novice
     {
         public ClassToken_Ninja()
@@ -456,7 +515,7 @@ namespace ExperienceAndClasses.Items
         }
     }
 
-    /* Cleric */
+    // Cleric
     public class ClassToken_Cleric : ClassToken_Novice
     {
         public ClassToken_Cleric()
@@ -482,7 +541,7 @@ namespace ExperienceAndClasses.Items
         }
     }
 
-    /* Cleric - Saint */
+    // Cleric - Saint
     public class ClassToken_Saint : ClassToken_Novice
     {
         public ClassToken_Saint()
@@ -519,37 +578,77 @@ namespace ExperienceAndClasses.Items
         }
     }
 
-    /* Hybrid */
-    public class ClassToken_Hybrid : ClassToken_Novice
-    {
-        public ClassToken_Hybrid()
-        {
-            name = "Hybrid";
-            tier = 2;
-            desc = "Basic hybrid class."+
-                       "\n\nCan advance to any Tier III class or to the well-rounded Hybrid II class."+
-                       "\n\nClass advancement is available at level " + Recipes.ClassRecipes.TIER_LEVEL_REQUIREMENTS[tier+1] + ".";
-        }
-        public override void AddRecipes()
-        {
-            Commons.QuckRecipe(Mod, new int[,] { { Mod.Find<ModItem>("ClassToken_Novice").Type, 1 }, { ItemID.DirtBlock, 200 } }, this, 1, new Recipes.ClassRecipes(Mod, tier));
-        }
-    }
+    // Hybrid
+    */
 
-    /* Hybrid - Hybrid II */
-    public class ClassToken_HybridII : ClassToken_Novice
-    {
-        public ClassToken_HybridII()
-        {
-            name = "Hybrid II";
-            tier = 3;
-            desc = "Advanced hybrid class."+
-                         "\nA jack-of-all-trades with numerous bonuses and decent"+
-                         "\nsurvivability.";
-        }
-        public override void AddRecipes()
-        {
-            Commons.QuckRecipe(Mod, new int[,] { {Mod.Find<ModItem>("ClassToken_Hybrid").Type, 1}, { ItemID.DirtBlock, 999} }, this, 1, new Recipes.ClassRecipes(Mod, tier));
-        }
-    }
+    //public class ClassToken_Hybrid : ClassToken_Novice
+    //{
+    //    public ClassToken_Hybrid()
+    //    {
+    //        name = "Hybrid";
+    //        tier = 2;
+    //        desc = "Basic hybrid class."+
+    //                   "\n\nCan advance to any Tier III class or to the well-rounded Hybrid II class."+
+    //                   "\n\nClass advancement is available at level " + Recipes.Helpers.TIER_LEVEL_REQUIREMENTS[tier+1] + ".";
+    //    }
+    //    public override void AddRecipes()
+    //    {
+    //        Recipe recipe = CreateRecipe();
+    //        recipe.AddIngredient(Mod.Find<ModItem>("ClassToken_Novice"));
+    //        recipe.AddIngredient(ItemID.DirtBlock, 200);
+
+    //        recipe.AddIngredient(Mod.Find<ModItem>("Monster_Orb"), 1);
+    //        recipe.AddCondition(NetworkText.FromLiteral("Experience"), recipe =>
+    //        {
+    //            return Recipes.Helpers.isTokenCraftable(tier);
+    //        });
+    //        recipe.AddOnCraftCallback(delegate (Recipe recipe, Item item)
+    //        {
+    //            Recipes.Helpers.onCraft(Mod, tier, recipe, item);
+    //        });
+
+
+    //        recipe.Register();
+
+    //        // Commons.QuckRecipe(Mod, new int[,] { { Mod.Find<ModItem>("ClassToken_Novice").Type, 1 }, { ItemID.DirtBlock, 200 } }, this, 1, new Recipes.ClassRecipes(Mod, tier));
+    //    }
+    //}
+
+
+    // Hybrid - Hybrid II
+    //public class ClassToken_HybridII : ClassToken_Novice
+    //{
+    //    public ClassToken_HybridII()
+    //    {
+    //        name = "Hybrid II";
+    //        tier = 3;
+    //        desc = "Advanced hybrid class."+
+    //                     "\nA jack-of-all-trades with numerous bonuses and decent"+
+    //                     "\nsurvivability.";
+    //    }
+    //    public override void AddRecipes()
+    //    {
+    //        Recipe recipe = CreateRecipe();
+    //        recipe.AddIngredient(Mod.Find<ModItem>("ClassToken_Hybrid"));
+    //        recipe.AddIngredient(ItemID.DirtBlock, 999);
+
+
+    //        recipe.AddIngredient(Mod.Find<ModItem>("Boss_Orb"), 5);
+    //        recipe.AddIngredient(Mod.Find<ModItem>("Monster_Orb"), 50);
+
+    //        recipe.AddCondition(NetworkText.FromLiteral("Experience"), recipe =>
+    //        {
+    //            return Recipes.Helpers.isTokenCraftable(tier);
+    //        });
+    //        recipe.AddOnCraftCallback(delegate (Recipe recipe, Item item)
+    //        {
+    //            Recipes.Helpers.onCraft(Mod, tier, recipe, item);
+    //        });
+
+    //        recipe.Register();
+
+    //        // Commons.QuckRecipe(Mod, new int[,] { {Mod.Find<ModItem>("ClassToken_Hybrid").Type, 1}, { ItemID.DirtBlock, 999} }, this, 1, new Recipes.ClassRecipes(Mod, tier));
+    //    }
+    //}
+
 }

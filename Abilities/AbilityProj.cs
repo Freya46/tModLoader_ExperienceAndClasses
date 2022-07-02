@@ -39,7 +39,7 @@ namespace ExperienceAndClasses.Abilities
                         }
                     }
 
-                    Main.player[Projectile.owner].GetModPlayer<MyPlayer>(Mod).sanctuaries[sanc_index] = Projectile;
+                    Main.player[Projectile.owner].GetModPlayer<MyPlayer>().sanctuaries[sanc_index] = Projectile;
                 }
 
                 //unlimited duration
@@ -80,7 +80,7 @@ namespace ExperienceAndClasses.Abilities
             }
             public override void Kill(int timeLeft)
             {
-                MyPlayer myPlayer = Main.player[Projectile.owner].GetModPlayer<MyPlayer>(Mod);
+                MyPlayer myPlayer = Main.player[Projectile.owner].GetModPlayer<MyPlayer>();
                 if (myPlayer.sanctuaries[sanc_index].Equals(Projectile))
                 {
                     myPlayer.sanctuaries[sanc_index] = null;
@@ -246,7 +246,7 @@ namespace ExperienceAndClasses.Abilities
                                 player.statLife += amount;
                                 if (sanctuary_heal)
                                 {
-                                    player.GetModPlayer<MyPlayer>(Mod).time_last_sanc_effect = DateTime.Now;
+                                    player.GetModPlayer<MyPlayer>().time_last_sanc_effect = DateTime.Now;
                                 }
                             }
                             else if (amount < 0)
@@ -349,7 +349,7 @@ namespace ExperienceAndClasses.Abilities
 
                     if (Main.player[player_index].active && !Main.player[player_index].dead)
                     {
-                        MyPlayer myPlayer = Main.player[player_index].GetModPlayer<MyPlayer>(Mod);
+                        MyPlayer myPlayer = Main.player[player_index].GetModPlayer<MyPlayer>();
 
                         if (duration_seconds > 0) //add status
                         {
@@ -431,7 +431,7 @@ namespace ExperienceAndClasses.Abilities
             switch ((MODE)Projectile.ai[0])
             {
                 case MODE.ABILITY_CAST:
-                    SpreadDust(player.Center, ExperienceAndClasses.mod.DustType<Dusts.Dust_AbilityGeneric>(), 3, 5, 2, 150, AbilityMain.COLOUR_CLASS_TYPE[(int)Projectile.ai[1]]);
+                    SpreadDust(player.Center, DustID.Smoke, 3, 5, 2, 150, AbilityMain.COLOUR_CLASS_TYPE[(int)Projectile.ai[1]]);
                     break;
                 case MODE.HEAL:
                     SpreadDust(Projectile.position, DustID.AncientLight, 10, AbilityMain.Cleric_Active_Heal.RANGE / 6, 3, 150, Color.Red, true, true);
@@ -544,7 +544,7 @@ namespace ExperienceAndClasses.Abilities
         {
             if (!run_already)
             {
-                owner_myPlayer = Main.player[Projectile.owner].GetModPlayer<MyPlayer>(Mod);
+                owner_myPlayer = Main.player[Projectile.owner].GetModPlayer<MyPlayer>();
                 if (Main.LocalPlayer.whoAmI == owner_myPlayer.Player.whoAmI)
                 {
                     if ((owner_myPlayer.status_visuals[status_index] != null) && !owner_myPlayer.status_visuals[status_index].Equals(Projectile))

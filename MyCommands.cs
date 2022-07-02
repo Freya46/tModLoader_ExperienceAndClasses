@@ -72,7 +72,7 @@ namespace ExperienceAndClasses
 
         public override void Action(CommandCaller caller, string input, string[] args)
         {
-            MyPlayer localMyPlayer = caller.Player.GetModPlayer<MyPlayer>(Mod);
+            MyPlayer localMyPlayer = Main.LocalPlayer.GetModPlayer<MyPlayer>();
             localMyPlayer.UICDBars = !localMyPlayer.UICDBars;
             if (localMyPlayer.UICDBars)
                 Main.NewText("Cooldown bars enabled.", ExperienceAndClasses.MESSAGE_COLOUR_YELLOW);
@@ -92,7 +92,7 @@ namespace ExperienceAndClasses
 
         public override void Action(CommandCaller caller, string input, string[] args)
         {
-            MyPlayer localMyPlayer = caller.Player.GetModPlayer<MyPlayer>(Mod);
+            MyPlayer localMyPlayer = Main.LocalPlayer.GetModPlayer<MyPlayer>();
             float thresh = float.Parse(args[0]);
             if (thresh < 0f) thresh = -1f;
             localMyPlayer.thresholdCDMsg = thresh;
@@ -114,7 +114,7 @@ namespace ExperienceAndClasses
 
         public override void Action(CommandCaller caller, string input, string[] args)
         {
-            MyPlayer localMyPlayer = caller.Player.GetModPlayer<MyPlayer>(Mod);
+            MyPlayer localMyPlayer = Main.LocalPlayer.GetModPlayer<MyPlayer>();
             localMyPlayer.allowAFK = !localMyPlayer.allowAFK;
             if (localMyPlayer.allowAFK)
                 Main.NewText("AFK mode enabled.", ExperienceAndClasses.MESSAGE_COLOUR_YELLOW);
@@ -134,7 +134,7 @@ namespace ExperienceAndClasses
 
         public override void Action(CommandCaller caller, string input, string[] args)
         {
-            MyPlayer localMyPlayer = caller.Player.GetModPlayer<MyPlayer>(Mod);
+            MyPlayer localMyPlayer = Main.LocalPlayer.GetModPlayer<MyPlayer>();
             localMyPlayer.UIShow = !localMyPlayer.UIShow;
 
             if (localMyPlayer.UIShow)
@@ -155,7 +155,7 @@ namespace ExperienceAndClasses
 
         public override void Action(CommandCaller caller, string input, string[] args)
         {
-            MyPlayer localMyPlayer = caller.Player.GetModPlayer<MyPlayer>(Mod);
+            MyPlayer localMyPlayer = Main.LocalPlayer.GetModPlayer<MyPlayer>();
             localMyPlayer.UIInventory = !localMyPlayer.UIInventory;
 
             if (localMyPlayer.UIInventory)
@@ -176,7 +176,7 @@ namespace ExperienceAndClasses
 
         public override void Action(CommandCaller caller, string input, string[] args)
         {
-            MyPlayer localMyPlayer = caller.Player.GetModPlayer<MyPlayer>(Mod);
+            MyPlayer localMyPlayer = Main.LocalPlayer.GetModPlayer<MyPlayer>();
             localMyPlayer.UIExpBar = !localMyPlayer.UIExpBar;
             if (localMyPlayer.UIExpBar)
                 Main.NewText("Experience bar enabled.", ExperienceAndClasses.MESSAGE_COLOUR_YELLOW);
@@ -196,7 +196,7 @@ namespace ExperienceAndClasses
 
         public override void Action(CommandCaller caller, string input, string[] args)
         {
-            MyPlayer localMyPlayer = caller.Player.GetModPlayer<MyPlayer>(Mod);
+            MyPlayer localMyPlayer = Main.LocalPlayer.GetModPlayer<MyPlayer>();
             //UI.UIExp myUI = (mod as ExperienceAndClasses).uiExp;
 
             localMyPlayer.UITrans = !localMyPlayer.UITrans;
@@ -219,8 +219,8 @@ namespace ExperienceAndClasses
 
         public override void Action(CommandCaller caller, string input, string[] args)
         {
-            MyPlayer localMyPlayer = caller.Player.GetModPlayer<MyPlayer>(Mod);
-            UI.UIExp myUI = (Mod as ExperienceAndClasses).uiExp;
+            MyPlayer localMyPlayer = Main.LocalPlayer.GetModPlayer<MyPlayer>();
+            UI.UIExp myUI = ExperienceAndClasses.uiExp;
 
             UI.UIExp.SetPosition(400f, 100f);
             localMyPlayer.UIShow = true;
@@ -253,7 +253,7 @@ namespace ExperienceAndClasses
                 if (player.active)
                 {
                     //temp
-                    exp = player.GetModPlayer<MyPlayer>(Mod).GetExp();
+                    exp = Main.LocalPlayer.GetModPlayer<MyPlayer>().GetExp();
                     //Main.NewText(player.name + "=" + exp);
 
                     job = Methods.Experience.GetClass(player);
@@ -280,7 +280,7 @@ namespace ExperienceAndClasses
 
         public override void Action(CommandCaller caller, string input, string[] args)
         {
-            MyPlayer localMyPlayer = caller.Player.GetModPlayer<MyPlayer>(Mod);
+            MyPlayer localMyPlayer = Main.LocalPlayer.GetModPlayer<MyPlayer>();
 
             double exp = Double.Parse(args[0]);
             Methods.ChatCommands.CommandSetExp(Mod, localMyPlayer.GetExp() + exp, input);
@@ -298,7 +298,7 @@ namespace ExperienceAndClasses
 
         public override void Action(CommandCaller caller, string input, string[] args)
         {
-            MyPlayer localMyPlayer = caller.Player.GetModPlayer<MyPlayer>(Mod);
+            MyPlayer localMyPlayer = Main.LocalPlayer.GetModPlayer<MyPlayer>();
 
             double exp = Double.Parse(args[0]);
             Methods.ChatCommands.CommandSetExp(Mod, localMyPlayer.GetExp() - exp, input);
@@ -378,7 +378,7 @@ namespace ExperienceAndClasses
 
         public override void Action(CommandCaller caller, string input, string[] args)
         {
-            MyPlayer localMyPlayer = caller.Player.GetModPlayer<MyPlayer>(Mod);
+            MyPlayer localMyPlayer = Main.LocalPlayer.GetModPlayer<MyPlayer>();
 
             int amt;
             if (args.Length == 0) amt = 1;
@@ -403,7 +403,7 @@ namespace ExperienceAndClasses
 
         public override void Action(CommandCaller caller, string input, string[] args)
         {
-            MyPlayer localMyPlayer = caller.Player.GetModPlayer<MyPlayer>(Mod);
+            MyPlayer localMyPlayer = Main.LocalPlayer.GetModPlayer<MyPlayer>();
 
             int amt;
             if (args.Length == 0) amt = 1;
@@ -447,7 +447,7 @@ namespace ExperienceAndClasses
 
         public override void Action(CommandCaller caller, string input, string[] args)
         {
-            MyPlayer localMyPlayer = caller.Player.GetModPlayer<MyPlayer>(Mod);
+            MyPlayer localMyPlayer = Main.LocalPlayer.GetModPlayer<MyPlayer>();
 
             localMyPlayer.displayExp = !localMyPlayer.displayExp;
             if (localMyPlayer.displayExp)
@@ -591,7 +591,7 @@ namespace ExperienceAndClasses
 
         public override void Action(CommandCaller caller, string input, string[] args)
         {
-            MyPlayer localMyPlayer = caller.Player.GetModPlayer<MyPlayer>(Mod);
+            MyPlayer localMyPlayer = Main.LocalPlayer.GetModPlayer<MyPlayer>();
             localMyPlayer.traceChar = !localMyPlayer.traceChar;
             if (localMyPlayer.traceChar)
                 Main.NewText("Character trace is enabled.", ExperienceAndClasses.MESSAGE_COLOUR_YELLOW);

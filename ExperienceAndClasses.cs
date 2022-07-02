@@ -12,6 +12,7 @@ using Terraria.ID;
 using System.Reflection;
 
 //needed for compiling outside of Terraria
+
 public class Application
 {
     [STAThread]
@@ -58,8 +59,8 @@ namespace ExperienceAndClasses
     class ExperienceAndClasses : Mod
     {
         //UI
-        private UserInterface myUserInterface;
-        public UIExp uiExp;
+        public static UserInterface myUserInterface;
+        public static UIExp uiExp;
 
         //message colours
         public static readonly Color MESSAGE_COLOUR_RED = new Color(255, 0, 0);
@@ -208,10 +209,7 @@ namespace ExperienceAndClasses
         public ExperienceAndClasses()
         {
             Methods.Experience.CalcExpReqs();
-            Properties = new ModProperties()
-            {
-                Autoload = true,
-            };
+            ContentAutoloadingEnabled = true;
 
             //get debuff id from names
             FieldInfo[] fields = typeof(BuffID).GetFields();
@@ -233,9 +231,9 @@ namespace ExperienceAndClasses
             //setup hotkeys
             for (int i=0; i<NUMBER_OF_ABILITY_SLOTS; i++)
             {
-                HOTKEY_ABILITY[i] = RegisterHotKey("Ability " + (i + 1), HOTKEY_DEFAULTS[i]);
+                HOTKEY_ABILITY[i] = KeybindLoader.RegisterKeybind(this, "Ability " + (i + 1), HOTKEY_DEFAULTS[i]);
             }
-            HOTKEY_ALTERNATE_EFFECT = RegisterHotKey("Alternate Effect", "LeftShift");
+            HOTKEY_ALTERNATE_EFFECT = KeybindLoader.RegisterKeybind(this, "Alternate Effect", "LeftShift");
 
             uiExp = new UIExp();
             uiExp.Activate();
@@ -267,7 +265,7 @@ namespace ExperienceAndClasses
             bool traceChar = false;
             if (Main.netMode!=2)
             {
-                localMyPlayer = Main.LocalPlayer.GetModPlayer<MyPlayer>(this);
+                localMyPlayer = Main.LocalPlayer.GetModPlayer<MyPlayer>();
                 traceChar = localMyPlayer.traceChar;
             }
             Mod mod = (this as Mod);
@@ -336,7 +334,7 @@ namespace ExperienceAndClasses
                 //Player's response to server's request for experience
                 case ExpModMessageType.ClientTellExperience:
                     player = Main.player[reader.ReadInt32()];
-                    myPlayer = player.GetModPlayer<MyPlayer>(this);
+                    myPlayer = player.GetModPlayer<MyPlayer>();
                     myPlayer.experience = reader.ReadDouble();
                     ChatHelper.BroadcastChatMessage(NetworkText.FromLiteral("Experience synced for player #" +player.whoAmI+":"+player.name), ExperienceAndClasses.MESSAGE_COLOUR_YELLOW);
                     Console.WriteLine("Experience synced for player #" + player.whoAmI + ":" + player.name);
@@ -347,7 +345,7 @@ namespace ExperienceAndClasses
                         Methods.PacketSender.ServerSyncExp(mod, true);
                     }
 
-                    if (worldTrace || traceChar) Methods.ChatCommands.Trace("TRACE:Recieved ClientTellExperience from player #" + player.whoAmI + ":" + player.name+" = "+ player.GetModPlayer<MyPlayer>(this).experience);
+                    if (worldTrace || traceChar) Methods.ChatCommands.Trace("TRACE:Recieved ClientTellExperience from player #" + player.whoAmI + ":" + player.name+" = "+ player.GetModPlayer<MyPlayer>().experience);
                     break;
 
                 //Server telling everyone a player's new exp value
@@ -359,7 +357,7 @@ namespace ExperienceAndClasses
                     //act
                     if (newExp > 0)
                     {
-                        myPlayer = player.GetModPlayer<MyPlayer>(this);
+                        myPlayer = player.GetModPlayer<MyPlayer>();
                         double expChange = newExp - myPlayer.experience;
                         myPlayer.experience = newExp;
                         myPlayer.ExpMsg(expChange);
@@ -379,7 +377,7 @@ namespace ExperienceAndClasses
                     player = Main.player[reader.ReadInt32()];
                     expAdd = reader.ReadDouble();
                     //act
-                    myPlayer = player.GetModPlayer<MyPlayer>(this);
+                    myPlayer = player.GetModPlayer<MyPlayer>();
                     myPlayer.AddExp(expAdd);
 
                     if (worldTrace || traceChar) Methods.ChatCommands.Trace("TRACE:Recieved ClientTellAddExp from player #" + player.whoAmI + ":" + player.name + " = " + expAdd);
@@ -393,7 +391,7 @@ namespace ExperienceAndClasses
                     expAdd = reader.ReadDouble();
                     text = reader.ReadString();
                     //act
-                    myPlayer = player.GetModPlayer<MyPlayer>(this);
+                    myPlayer = player.GetModPlayer<MyPlayer>();
                     if (myPlayer.auth || !worldRequireAuth)
                     {
                         myPlayer.AddExp(expAdd);
@@ -414,7 +412,7 @@ namespace ExperienceAndClasses
                     newCode = reader.ReadDouble();
                     text = reader.ReadString();
                     //act
-                    myPlayer = player.GetModPlayer<MyPlayer>(this);
+                    myPlayer = player.GetModPlayer<MyPlayer>();
                     if (myPlayer.auth)
                     {
                         worldAuthCode = newCode;
@@ -425,7 +423,7 @@ namespace ExperienceAndClasses
                         {
                             if (Main.player[playerIndex].active)
                             {
-                                myPlayer = player.GetModPlayer<MyPlayer>(this);
+                                myPlayer = player.GetModPlayer<MyPlayer>();
                                 myPlayer.auth = false;
                             }
                         }
@@ -433,7 +431,7 @@ namespace ExperienceAndClasses
                     }
                     else if (!worldRequireAuth)
                     {
-                        NetMessage.SendChatMessageToClient(NetworkText.FromLiteral("This command requires expauth even when noauth is enabled."), MESSAGE_COLOUR_RED, player.whoAmI);
+                        // TODO FIXME NetMessage.SendChatMessageToClient(NetworkText.FromLiteral("This command requires expauth even when noauth is enabled."), MESSAGE_COLOUR_RED, player.whoAmI);
                         Console.WriteLine("Rejected command request from player #" + player.whoAmI + ":" + player.name + " " + text + "\nExperience&Classes expauth code: " + ExperienceAndClasses.worldAuthCode);
                     }
                     else
@@ -452,7 +450,7 @@ namespace ExperienceAndClasses
                     exprate = reader.ReadDouble();
                     text = reader.ReadString();
                     //act
-                    myPlayer = player.GetModPlayer<MyPlayer>(this);
+                    myPlayer = player.GetModPlayer<MyPlayer>();
                     if (myPlayer.auth || !worldRequireAuth)
                     {
                         worldExpModifier = exprate;
@@ -478,7 +476,7 @@ namespace ExperienceAndClasses
                     newInt = reader.ReadInt32();
                     text = reader.ReadString();
                     //act
-                    myPlayer = player.GetModPlayer<MyPlayer>(this);
+                    myPlayer = player.GetModPlayer<MyPlayer>();
                     if (myPlayer.auth || !worldRequireAuth)
                     {
                         worldLevelCap = newInt;
@@ -504,7 +502,7 @@ namespace ExperienceAndClasses
                     newInt = reader.ReadInt32();
                     text = reader.ReadString();
                     //act
-                    myPlayer = player.GetModPlayer<MyPlayer>(this);
+                    myPlayer = player.GetModPlayer<MyPlayer>();
                     if (myPlayer.auth || !worldRequireAuth)
                     {
                         worldClassDamageReduction = newInt;
@@ -530,7 +528,7 @@ namespace ExperienceAndClasses
                     newBool = reader.ReadBoolean();
                     text = reader.ReadString();
                     //act
-                    myPlayer = player.GetModPlayer<MyPlayer>(this);
+                    myPlayer = player.GetModPlayer<MyPlayer>();
                     if (myPlayer.auth || !worldRequireAuth)
                     {
                         worldIgnoreCaps = newBool;
@@ -554,7 +552,7 @@ namespace ExperienceAndClasses
                     player = Main.player[reader.ReadInt32()];
                     text = reader.ReadString();
                     //act
-                    myPlayer = player.GetModPlayer<MyPlayer>(this);
+                    myPlayer = player.GetModPlayer<MyPlayer>();
                     if (myPlayer.auth)
                     {
                         worldRequireAuth = !worldRequireAuth;
@@ -566,7 +564,7 @@ namespace ExperienceAndClasses
                     }
                     else if (!worldRequireAuth)
                     {
-                        NetMessage.SendChatMessageToClient(NetworkText.FromLiteral("This command requires expauth even when noauth is enabled."), MESSAGE_COLOUR_RED, player.whoAmI);
+                        // TODO FIXME NetMessage.SendChatMessageToClient(NetworkText.FromLiteral("This command requires expauth even when noauth is enabled."), MESSAGE_COLOUR_RED, player.whoAmI);
                         Console.WriteLine("Rejected command request from player #" + player.whoAmI + ":" + player.name + " " + text + "\nExperience&Classes expauth code: " + ExperienceAndClasses.worldAuthCode);
                     }
                     else
@@ -583,7 +581,7 @@ namespace ExperienceAndClasses
                     player = Main.player[reader.ReadInt32()];
                     text = reader.ReadString();
                     //act
-                    myPlayer = player.GetModPlayer<MyPlayer>(this);
+                    myPlayer = player.GetModPlayer<MyPlayer>();
                     if (myPlayer.auth || !worldRequireAuth)
                     {
                         worldTrace = !worldTrace;
@@ -609,7 +607,7 @@ namespace ExperienceAndClasses
                     newDouble = reader.ReadDouble();
                     text = reader.ReadString();
                     //act
-                    myPlayer = player.GetModPlayer<MyPlayer>(this);
+                    myPlayer = player.GetModPlayer<MyPlayer>();
                     if (myPlayer.auth || !worldRequireAuth)
                     {
                         worldDeathPenalty = newDouble;
@@ -634,9 +632,9 @@ namespace ExperienceAndClasses
                     pIndex = reader.ReadInt32();
                     //act
                     player = Main.player[pIndex];
-                    myPlayer = player.GetModPlayer<MyPlayer>(this);
+                    myPlayer = player.GetModPlayer<MyPlayer>();
                     myPlayer.afk = true;
-                    NetMessage.SendChatMessageToClient(NetworkText.FromLiteral("You are now AFK. You will not recieve death penalties to experience but you cannot gain experience either."), MESSAGE_COLOUR_RED, pIndex);
+                    // TODO FIXME NetMessage.SendChatMessageToClient(NetworkText.FromLiteral("You are now AFK. You will not recieve death penalties to experience but you cannot gain experience either."), MESSAGE_COLOUR_RED, pIndex);
                     Console.WriteLine(pIndex + ":" + player.name + " is now AFK.");
 
                     if (worldTrace || traceChar) Methods.ChatCommands.Trace("TRACE:Recieved ClientAFK from player #" + player.whoAmI + ":" + player.name);
@@ -649,9 +647,9 @@ namespace ExperienceAndClasses
                     pIndex = reader.ReadInt32();
                     //act
                     player = Main.player[pIndex];
-                    myPlayer = player.GetModPlayer<MyPlayer>(this);
+                    myPlayer = player.GetModPlayer<MyPlayer>();
                     myPlayer.afk = false;
-                    NetMessage.SendChatMessageToClient(NetworkText.FromLiteral("You are no longer AFK."), MESSAGE_COLOUR_YELLOW, pIndex);
+                    // TODO FIXME NetMessage.SendChatMessageToClient(NetworkText.FromLiteral("You are no longer AFK."), MESSAGE_COLOUR_YELLOW, pIndex);
                     Console.WriteLine(pIndex + ":" + player.name + " is no longer AFK.");
 
                     if (worldTrace || traceChar) Methods.ChatCommands.Trace("TRACE:Recieved ClientUnAFK from player #" + player.whoAmI + ":" + player.name);
@@ -760,7 +758,7 @@ namespace ExperienceAndClasses
                         player = Main.player[pIndex];
                         if (player.active && (newExp >= 0))
                         {
-                            myPlayer = player.GetModPlayer<MyPlayer>(this);
+                            myPlayer = player.GetModPlayer<MyPlayer>();
                             double expChange = newExp - myPlayer.experience;
                             myPlayer.experience = newExp;
                             myPlayer.ExpMsg(expChange);
@@ -781,17 +779,17 @@ namespace ExperienceAndClasses
                     player = Main.player[reader.ReadInt32()];
                     double code = reader.ReadDouble();
                     //act
-                    myPlayer = player.GetModPlayer<MyPlayer>(this);
+                    myPlayer = player.GetModPlayer<MyPlayer>();
                     if (code == -1 || myPlayer.auth)
                     {
-                        NetMessage.SendChatMessageToClient(NetworkText.FromLiteral("Auth: " + myPlayer.auth), ExperienceAndClasses.MESSAGE_COLOUR_YELLOW, player.whoAmI);
+                        // TODO FIXME NetMessage.SendChatMessageToClient(NetworkText.FromLiteral("Auth: " + myPlayer.auth), ExperienceAndClasses.MESSAGE_COLOUR_YELLOW, player.whoAmI);
                     }
                     else 
                     {
                         if (worldAuthCode == code)
                         {
                             myPlayer.auth = true;
-                            NetMessage.SendChatMessageToClient(NetworkText.FromLiteral("Auth: " + myPlayer.auth), ExperienceAndClasses.MESSAGE_COLOUR_YELLOW, player.whoAmI);
+                            // TODO FIXME NetMessage.SendChatMessageToClient(NetworkText.FromLiteral("Auth: " + myPlayer.auth), ExperienceAndClasses.MESSAGE_COLOUR_YELLOW, player.whoAmI);
                             Console.WriteLine("Accepted auth attempt from player #" + player.whoAmI + ":" + player.name + " " + code);
                         }
                         else
@@ -827,23 +825,7 @@ namespace ExperienceAndClasses
 
         /* ~~~~~~~~~~~~~~~~~~~~~ MISC OVERRIDES ~~~~~~~~~~~~~~~~~~~~~ */
 
-        public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
-        {
-            int MouseTextIndex = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Mouse Text"));
-            if (MouseTextIndex != -1)
-            {
-                layers.Insert(MouseTextIndex, new LegacyGameInterfaceLayer(
-                    "Experience UI",
-                    delegate
-                    {
-                        myUserInterface.Update(Main._drawInterfaceGameTime);
-                        uiExp.Draw(Main.spriteBatch);
-                        return true;
-                    },
-                    InterfaceScaleType.UI)
-                );
-            }
-        }
+        // Moved to MyModSystem.cs
 
         /* ~~~~~~~~~~~~~~~~~~~~~ MISC ~~~~~~~~~~~~~~~~~~~~~ */
 

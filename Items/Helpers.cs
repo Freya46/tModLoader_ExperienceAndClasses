@@ -68,7 +68,7 @@ namespace ExperienceAndClasses.Items
         public static bool HeldYoyo(Player player)
         {
             Item item = player.HeldItem;
-            if ((item.melee || item.thrown) && item.channel) return true;
+            if ((item.DamageType == DamageClass.Melee || item.DamageType == DamageClass.Throwing) && item.channel) return true;
                 else return false;
         }
 
@@ -643,7 +643,7 @@ namespace ExperienceAndClasses.Items
             }
 
             //get the MyPlayer
-            if (myPlayer == null) myPlayer = player.GetModPlayer<MyPlayer>(mod);
+            if (myPlayer == null) myPlayer = player.GetModPlayer<MyPlayer>();
 
             //experience and ignore class caps
             double experience = 0;
@@ -805,7 +805,7 @@ namespace ExperienceAndClasses.Items
             floatBonus = meleeDamage * level;
             if (floatBonus > 0)
             {
-                if (applyEffects) player.meleeDamage += floatBonus;
+                if (applyEffects) player.GetDamage(DamageClass.Melee) += floatBonus;
                 bonuses += "\n+" + (floatBonus * 100) + "% melee damage";
             }
             if (meleeDamage > 0) desc += "\n+" + (meleeDamage * 100) + "% melee damage";
@@ -815,7 +815,7 @@ namespace ExperienceAndClasses.Items
             if (intBonus > 0)
             {
                 if (intBonus > meleeCrit_CAP && !ignoreCaps) intBonus = meleeCrit_CAP;
-                if (applyEffects) player.meleeCrit += intBonus;
+                if (applyEffects) player.GetCritChance(DamageClass.Melee) += intBonus;
                 bonuses += "\n+" + intBonus + "% melee crit";
             }
             if (meleeCrit > 0)
@@ -831,11 +831,11 @@ namespace ExperienceAndClasses.Items
                 //limit yo-yo to 200% speed
                 if (HeldYoyo(player))
                 {
-                    float meleeSpeedCurrent = player.meleeSpeed;
+                    float meleeSpeedCurrent = player.GetAttackSpeed(DamageClass.Melee);
                     if ((meleeSpeedCurrent + floatBonus) > 2f) floatBonus = 2f - meleeSpeedCurrent;
                 }
 
-                if (applyEffects) player.meleeSpeed += floatBonus;
+                if (applyEffects) player.GetAttackSpeed(DamageClass.Melee) += floatBonus;
                 bonuses += "\n+" + (floatBonus * 100) + "% melee speed";
             }
             if (meleeSpeed > 0)
@@ -847,7 +847,7 @@ namespace ExperienceAndClasses.Items
             floatBonus = thrownDamage * level;
             if (floatBonus > 0)
             {
-                if (applyEffects) player.thrownDamage += floatBonus;
+                if (applyEffects) player.GetDamage(DamageClass.Throwing) += floatBonus;
                 bonuses += "\n+" + (floatBonus * 100) + "% throwing damage";
             }
             if (thrownDamage > 0) desc += "\n+" + (thrownDamage * 100) + "% throwing damage";
@@ -856,7 +856,7 @@ namespace ExperienceAndClasses.Items
             floatBonus = thrownVelocity * level;
             if (floatBonus > 0)
             {
-                if (applyEffects) player.thrownVelocity += floatBonus;
+                if (applyEffects) player.GetAttackSpeed(DamageClass.Throwing) += floatBonus;
                 bonuses += "\n+" + (floatBonus * 100) + "% throwing velocity";
             }
             if (thrownVelocity > 0) desc += "\n+" + (thrownVelocity * 100) + "% throwing velocity";
@@ -866,7 +866,7 @@ namespace ExperienceAndClasses.Items
             if (intBonus > 0)
             {
                 if (intBonus > thrownCrit_CAP && !ignoreCaps) intBonus = thrownCrit_CAP;
-                if (applyEffects) player.thrownCrit += intBonus;
+                if (applyEffects) player.GetCritChance(DamageClass.Throwing) += intBonus;
                 bonuses += "\n+" + intBonus + "% throwing crit";
             }
             if (thrownCrit > 0)
@@ -879,7 +879,7 @@ namespace ExperienceAndClasses.Items
             floatBonus = rangedDamage * level;
             if (floatBonus > 0)
             {
-                if (applyEffects) player.rangedDamage += floatBonus;
+                if (applyEffects) player.GetDamage(DamageClass.Ranged) += floatBonus;
                 bonuses += "\n+" + (floatBonus * 100) + "% ranged damage";
             }
             if (rangedDamage > 0) desc += "\n+" + (rangedDamage * 100) + "% ranged damage";
@@ -890,7 +890,7 @@ namespace ExperienceAndClasses.Items
             {
                 if (applyEffects && doubleBonus > 0) player.arrowDamage += (float)doubleBonus;
                 if (applyEffects && doubleBonus < 0) player.arrowDamage -= (float)(-1 * doubleBonus);
-                if (applyEffects && player.arrowDamage < 0) player.arrowDamage = 0;
+                if (applyEffects && player.arrowDamage.Base < 0) player.arrowDamage.Base = 0;
                 bonuses += "\n";
                 if (arrowDamage >= 0) bonuses += "+";
                 //else bonuses += "-";
@@ -904,7 +904,7 @@ namespace ExperienceAndClasses.Items
             if (intBonus > 0)
             {
                 if (intBonus > rangedCrit_CAP && !ignoreCaps) intBonus = rangedCrit_CAP;
-                if (applyEffects) player.rangedCrit += intBonus;
+                if (applyEffects) player.GetCritChance(DamageClass.Ranged) += intBonus;
                 bonuses += "\n+" + intBonus + "% ranged crit";
             }
             if (rangedCrit > 0)
@@ -917,7 +917,7 @@ namespace ExperienceAndClasses.Items
             floatBonus = magicDamage * level;
             if (floatBonus > 0)
             {
-                if (applyEffects) player.magicDamage += floatBonus;
+                if (applyEffects) player.GetDamage(DamageClass.Magic) += floatBonus;
                 bonuses += "\n+" + (floatBonus * 100) + "% magic damage";
             }
             if (magicDamage > 0) desc += "\n+" + (magicDamage * 100) + "% magic damage";
@@ -941,7 +941,7 @@ namespace ExperienceAndClasses.Items
             if (intBonus > 0)
             {
                 if (intBonus > magicCrit_CAP && !ignoreCaps) intBonus = magicCrit_CAP;
-                if (applyEffects) player.magicCrit += intBonus;
+                if (applyEffects) player.GetCritChance(DamageClass.Magic) += intBonus;
                 bonuses += "\n+" + intBonus + "% magic crit";
             }
             if (magicCrit > 0)
@@ -954,7 +954,7 @@ namespace ExperienceAndClasses.Items
             floatBonus = minionDamage * level;
             if (floatBonus > 0)
             {
-                if (applyEffects) player.minionDamage += floatBonus;
+                if (applyEffects) player.GetDamage(DamageClass.Summon) += floatBonus;
                 bonuses += "\n+" + (floatBonus * 100) + "% minion damage";
 
             }
@@ -977,7 +977,7 @@ namespace ExperienceAndClasses.Items
                 if (floatBonus > 0.9f) floatBonus = 0.9f;
                 if (floatBonus > 0f)
                 {
-                    player.minionDamage *= (1 - floatBonus);
+                    player.GetDamage(DamageClass.Summon) *= (1 - floatBonus);
                     bonuses += "\n-" + (floatBonus * 100) + "% minion damage";
                 }
             }
@@ -997,7 +997,7 @@ namespace ExperienceAndClasses.Items
             if (floatBonus > 0)
             {
                 if (floatBonus > minionKB_CAP && !ignoreCaps) floatBonus = minionKB_CAP;
-                if (applyEffects) player.minionKB += floatBonus;
+                if (applyEffects) player.GetKnockback(DamageClass.Summon) += floatBonus;
                 bonuses += "\n+" + (floatBonus * 100) + "% minion knockback";
             }
             if (minionKB > 0)
@@ -1146,15 +1146,15 @@ namespace ExperienceAndClasses.Items
             //throw ammo 33%
             if (thrownCost33_LEVEL != -1 && level >= thrownCost33_LEVEL)
             {
-                if (applyEffects) player.thrownCost33 = true;
-                bonuses += "\n33% less throwing items used";
+                // TODO FIXME if (applyEffects) player.cost = true;
+                bonuses += "\n33% less throwing items used (NOT IMPLEMENTED!)";
             }
 
             //throw ammo 50%
             if (thrownCost50_LEVEL != -1 && level >= thrownCost50_LEVEL)
             {
-                if (applyEffects) player.thrownCost50 = true;
-                bonuses += "\n50% less throwing items used";
+                // TODO FIXME if (applyEffects) player.thrownCost50 = true;
+                bonuses += "\n50% less throwing items used (NOT IMPLEMENTED!)";
             }
 
             //20% less ammo
@@ -1293,17 +1293,17 @@ namespace ExperienceAndClasses.Items
                 intBonus = 0;
                 if (defenseAura3_LEVEL != -1 && level >= defenseAura3_LEVEL)
                 {
-                    buff = mod.BuffType<Buffs.Aura_Defense3>();
+                    buff = ModContent.BuffType<Buffs.Aura_Defense3>();
                     intBonus = Buffs.Aura_Defense3.bonus_defense;
                 }
                 else if (defenseAura2_LEVEL != -1 && level >= defenseAura2_LEVEL)
                 {
-                    buff = mod.BuffType<Buffs.Aura_Defense2>();
+                    buff = ModContent.BuffType<Buffs.Aura_Defense2>();
                     intBonus = Buffs.Aura_Defense2.bonus_defense;
                 }
                 else
                 {
-                    buff = mod.BuffType<Buffs.Aura_Defense1>();
+                    buff = ModContent.BuffType<Buffs.Aura_Defense1>();
                     intBonus = Buffs.Aura_Defense1.bonus_defense;
                 }
                 

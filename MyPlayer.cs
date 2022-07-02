@@ -120,9 +120,9 @@ namespace ExperienceAndClasses
             status_visuals_projectile_ids = new int[(int)ExperienceAndClasses.STATUSES.COUNT];
 
             //define status visuals
-            status_visuals_projectile_ids[(int)ExperienceAndClasses.STATUSES.Blessing] = Mod.ProjectileType<Abilities.AbilityProj.Status_Cleric_Blessing>();
-            status_visuals_projectile_ids[(int)ExperienceAndClasses.STATUSES.Paragon] = Mod.ProjectileType<Abilities.AbilityProj.Status_Cleric_Paragon>();
-            status_visuals_projectile_ids[(int)ExperienceAndClasses.STATUSES.Renew] = Mod.ProjectileType<Abilities.AbilityProj.Status_Cleric_Paragon_Renew>();
+            status_visuals_projectile_ids[(int)ExperienceAndClasses.STATUSES.Blessing] = Mod.Find<ModProjectile>("Status_Cleric_Blessing").Type;
+            status_visuals_projectile_ids[(int)ExperienceAndClasses.STATUSES.Paragon] = Mod.Find<ModProjectile>("Status_Cleric_Paragon").Type;
+            status_visuals_projectile_ids[(int)ExperienceAndClasses.STATUSES.Renew] = Mod.Find<ModProjectile>("Status_Cleric_Paragon_Renew").Type;
         }
 
         /// <summary>
@@ -314,25 +314,23 @@ namespace ExperienceAndClasses
                 }
             }
 
-            return new TagCompound {
-                {"experience", experience},
-                {"display_exp", displayExp},
-                {"allow_afk", allowAFK},
-                {"UI_left", UILeft},
-                {"UI_top", UITop},
-                {"UI_show", UIShow},
-                {"UI_expbar_show", UIExpBar},
-                {"UI_trans", UITrans},
-                {"UI_cdbars_show", UICDBars},
-                {"UI_inv_show", UIInventory},
-                {"traceChar", traceChar},
-                {"thresh_cd_message", thresholdCDMsg},
-                {"show_kill_count", show_kill_count},
-                {"ability_message_overhead", ability_message_overhead},
-                {"last_world_name", Main.worldName},
-                {"sanctuaries_centers", sanctuaries_centers},
-                {"show_status_messages", show_status_messages},
-            };
+            tag.Add("experience", experience);
+            tag.Add("display_exp", displayExp);
+            tag.Add("allow_afk", allowAFK);
+            tag.Add("UI_left", UILeft);
+            tag.Add("UI_top", UITop);
+            tag.Add("UI_show", UIShow);
+            tag.Add("UI_expbar_show", UIExpBar);
+            tag.Add("UI_trans", UITrans);
+            tag.Add("UI_cdbars_show", UICDBars);
+            tag.Add("UI_inv_show", UIInventory);
+            tag.Add("traceChar", traceChar);
+            tag.Add("thresh_cd_message", thresholdCDMsg);
+            tag.Add("show_kill_count", show_kill_count);
+            tag.Add("ability_message_overhead", ability_message_overhead);
+            tag.Add("last_world_name", Main.worldName);
+            tag.Add("sanctuaries_centers", sanctuaries_centers);
+            tag.Add("show_status_messages", show_status_messages);
         }
 
         //load xp
@@ -369,15 +367,6 @@ namespace ExperienceAndClasses
             sanctuaries_centers = Commons.TryGetList<float>(tag, "sanctuaries_centers");
         }
 
-        public override void SetupStartInventory(IList<Item> items)
-        {
-            Item item = new Item();
-            item.SetDefaults(Mod.Find<ModItem>("ClassToken_Novice").Type);
-            item.stack = 1;
-            items.Add(item);
-
-            base.SetupStartInventory(items);
-        }
 
         public override void OnEnterWorld(Player player)
         {
@@ -392,7 +381,8 @@ namespace ExperienceAndClasses
                 if (experience < 0) //occurs when a player who does not have the mod joins a server that uses the mod
                 {
                     experience = 0;
-                    player.PutItemInInventory(Mod.Find<ModItem>("ClassToken_Novice").Type);
+                    player.PutItemInInventoryFromItemUsage(Mod.Find<ModItem>("ClassToken_Novice").Type);
+                    // player.PutItemInInventory(Mod.Find<ModItem>("ClassToken_Novice").Type);
                 }
 
                 UI.UIExp.Init(this);
@@ -625,7 +615,7 @@ namespace ExperienceAndClasses
                                 //draw
                                 if (draw_visual)
                                 {
-                                    Projectile.NewProjectile(Player.Center, new Vector2(0f), status_visuals_projectile_ids[i], 0, 0, Player.whoAmI);
+                                    Projectile.NewProjectile(null, Player.Center, new Vector2(0f), status_visuals_projectile_ids[i], 0, 0, Player.whoAmI);
                                 }
                             }
                         }
@@ -647,7 +637,8 @@ namespace ExperienceAndClasses
                         //sync
                         if (do_sync)
                         {
-                            Projectile.NewProjectile(Player.Center, new Vector2(0.1f), Mod.ProjectileType<Abilities.AbilityProj.Misc_PlayerStatus>(), Player.whoAmI, status_magnitude[i], Player.whoAmI, i, (float)status_end_time[i].Subtract(now).TotalSeconds);
+                            int proj = ModContent.ProjectileType<Abilities.AbilityProj.Misc_PlayerStatus>();
+                            Projectile.NewProjectile(null, Player.Center, new Vector2(0.1f), proj, Player.whoAmI, status_magnitude[i], Player.whoAmI, i, (float)status_end_time[i].Subtract(now).TotalSeconds);
                         }
                     }
                 }
@@ -656,7 +647,7 @@ namespace ExperienceAndClasses
             base.PostUpdateEquips();
         }
 
-        public override void ModifyDrawInfo(ref PlayerDrawInfo drawInfo)
+        public override void ModifyDrawInfo(ref PlayerDrawSet drawInfo)
         {
             base.ModifyDrawInfo(ref drawInfo);
         }
@@ -741,7 +732,8 @@ namespace ExperienceAndClasses
                             x = (int)sanctuaries_centers[counter++];
                             y = (int)sanctuaries_centers[counter++];
 
-                            proj_index = Projectile.NewProjectile(new Vector2(x, y), new Vector2(0f), ExperienceAndClasses.mod.ProjectileType<Abilities.AbilityProj.Cleric_Sanctuary>(), 0, 0, Main.LocalPlayer.whoAmI, sanc_index);
+                            int proj = ModContent.ProjectileType<Abilities.AbilityProj.Cleric_Sanctuary>();
+                            proj_index = Projectile.NewProjectile(null, new Vector2(x, y), new Vector2(0f), proj, 0, 0, Main.LocalPlayer.whoAmI, sanc_index);
                             sanctuaries[sanc_index] = Main.projectile[proj_index];
 
                             Main.NewText("Recreated sanctuary #" + (sanc_index + 1) + "!", ExperienceAndClasses.MESSAGE_COLOUR_OFF_COOLDOWN);
@@ -817,12 +809,13 @@ namespace ExperienceAndClasses
             //Assassin special attack
             DateTime now = DateTime.Now;
             bool ready = timeLastAttack.AddMilliseconds(openerTime_msec).CompareTo(now) <= 0;
-            if ((openerBonusPct>0 && item.melee) && ready) //(ready || target.life==target.lifeMax))
+
+            if ((openerBonusPct>0 && item.DamageType == DamageClass.Melee) && ready) //(ready || target.life==target.lifeMax))
             {
                 //if ready, add phase
                 if (ready)
                 {
-                    Player.AddBuff(Mod.BuffType<Buffs.Buff_OpenerPhase>(), 1);
+                    Player.AddBuff(ModContent.BuffType<Buffs.Buff_OpenerPhase>(), 1);
                     openerImmuneEnd = now.AddMilliseconds(openerImmuneTime_msec);
                 }
 
@@ -835,14 +828,14 @@ namespace ExperienceAndClasses
             else
             {
                 //bonus crit damage (Assassin)
-                if (item.melee && bonusCritPct > 0) damage = (int)Math.Round((double)damage * (1 + bonusCritPct), 0);
+                if (item.DamageType == DamageClass.Melee && bonusCritPct > 0) damage = (int)Math.Round((double)damage * (1 + bonusCritPct), 0);
             }
 
             //record time
             timeLastAttack = now;
 
             //remove buff
-            int buffInd = Player.FindBuffIndex(Mod.BuffType<Buffs.Buff_OpenerAttack>());
+            int buffInd = Player.FindBuffIndex(ModContent.BuffType<Buffs.Buff_OpenerAttack>());
             if (buffInd != -1) Player.DelBuff(buffInd);
 
             //base
@@ -863,7 +856,7 @@ namespace ExperienceAndClasses
                 //if ready, add phase
                 if (ready)
                 {
-                    Player.AddBuff(Mod.BuffType<Buffs.Buff_OpenerPhase>(), 2);
+                    Player.AddBuff(ModContent.BuffType<Buffs.Buff_OpenerPhase>(), 2);
                     openerImmuneEnd = now.AddMilliseconds(openerImmuneTime_msec);
                 }
 
@@ -881,7 +874,7 @@ namespace ExperienceAndClasses
             if (openerBonusPct > 0 && !Items.Helpers.HeldYoyo(Player)) timeLastAttack.AddMilliseconds(-50);
 
             //remove buff
-            int buffInd = Player.FindBuffIndex(Mod.BuffType<Buffs.Buff_OpenerAttack>());
+            int buffInd = Player.FindBuffIndex(ModContent.BuffType<Buffs.Buff_OpenerAttack>());
             if (buffInd != -1) Player.DelBuff(buffInd);
 
             //base
@@ -890,16 +883,16 @@ namespace ExperienceAndClasses
 
         public override void DrawEffects(PlayerDrawSet drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
         {
-            int buffInd = Player.FindBuffIndex(Mod.BuffType<Buffs.Buff_OpenerAttack>());
+            int buffInd = Player.FindBuffIndex(ModContent.BuffType<Buffs.Buff_OpenerAttack>());
             if (buffInd != -1)
             {
                 if (Main.rand.Next(5) == 0 && drawInfo.shadow == 0f)
                 {
-                    int dust = Dust.NewDust(drawInfo.position - new Vector2(2f, 2f), Player.width + 4, Player.height + 4, Mod.Find<ModDust>("Dust_OpenerAttack").Type, Player.velocity.X * 0.4f, Player.velocity.Y * 0.4f, 100, default(Color), 3f);
+                    int dust = Dust.NewDust(drawInfo.Position - new Vector2(2f, 2f), Player.width + 4, Player.height + 4, Mod.Find<ModDust>("Dust_OpenerAttack").Type, Player.velocity.X * 0.4f, Player.velocity.Y * 0.4f, 100, default(Color), 3f);
                     Main.dust[dust].noGravity = true;
                     Main.dust[dust].velocity *= 1.8f;
                     Main.dust[dust].velocity.Y -= 0.5f;
-                    Main.playerDrawDust.Add(dust);
+                    // Main.playerDrawDust.Add(dust);
                 }
             }
             base.DrawEffects(drawInfo, ref r, ref g, ref b, ref a, ref fullBright);
@@ -950,7 +943,8 @@ namespace ExperienceAndClasses
             if (!Player.dead && status_active[(int)ExperienceAndClasses.STATUSES.Blessing])
             {
                 //heal
-                Projectile.NewProjectile(Player.Center, new Vector2(0f), ExperienceAndClasses.mod.ProjectileType<Abilities.AbilityProj.Misc_HealHurt>(), (int)status_magnitude[(int)ExperienceAndClasses.STATUSES.Blessing], 0, Main.LocalPlayer.whoAmI, 1, Main.LocalPlayer.whoAmI);
+                int proj = ModContent.ProjectileType<Abilities.AbilityProj.Misc_HealHurt>();
+                Projectile.NewProjectile(null, Player.Center, new Vector2(0f), proj, (int)status_magnitude[(int)ExperienceAndClasses.STATUSES.Blessing], 0, Main.LocalPlayer.whoAmI, 1, Main.LocalPlayer.whoAmI);
                 //remove
                 EndStatus((int)ExperienceAndClasses.STATUSES.Blessing);
             }
@@ -1112,7 +1106,8 @@ namespace ExperienceAndClasses
             if (Player.whoAmI == Main.LocalPlayer.whoAmI)
             {
                 //local, sync effect ending
-                Projectile.NewProjectile(Player.Center, new Vector2(0.1f), Mod.ProjectileType<Abilities.AbilityProj.Misc_PlayerStatus>(), Player.whoAmI, 0, Player.whoAmI, index, -1);
+                int proj = ModContent.ProjectileType<Abilities.AbilityProj.Misc_PlayerStatus>();
+                Projectile.NewProjectile(null, Player.Center, new Vector2(0.1f), proj, Player.whoAmI, 0, Player.whoAmI, index, -1);
             }
         }
 

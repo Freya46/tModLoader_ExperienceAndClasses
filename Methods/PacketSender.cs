@@ -87,7 +87,7 @@ namespace ExperienceAndClasses.Methods
         {
             if (Main.netMode != 1) return;
 
-            MyPlayer localMyPlayer = Main.LocalPlayer.GetModPlayer<MyPlayer>(mod);
+            MyPlayer localMyPlayer = Main.LocalPlayer.GetModPlayer<MyPlayer>();
 
             ModPacket packet = mod.GetPacket();
             packet.Write((byte)ExpModMessageType.ClientTellExperience);
@@ -377,7 +377,7 @@ namespace ExperienceAndClasses.Methods
         {
             if (Main.netMode != 2) return;
 
-            MyPlayer myPlayer = player.GetModPlayer<MyPlayer>(mod);
+            MyPlayer myPlayer = player.GetModPlayer<MyPlayer>();
 
             ModPacket packet = mod.GetPacket();
 
@@ -434,7 +434,7 @@ namespace ExperienceAndClasses.Methods
                 packet.Write(player.whoAmI); //who dis
                 if (player.active)
                 {
-                    myPlayer = player.GetModPlayer<MyPlayer>(mod);
+                    myPlayer = player.GetModPlayer<MyPlayer>();
                     packet.Write(myPlayer.GetExp()); //xp
 
                     int kill_id = myPlayer.kill_count_track_id;
